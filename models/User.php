@@ -112,4 +112,20 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserVisitLog::class, ['user_id' => 'id']);
     }
+
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    public static function findByUsername($username)
+    {
+        return self::findOne(['username'=>$username]);
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
 }
