@@ -49,16 +49,21 @@ $config = [
                 ],
             ],
         ],
-//       'modules' => [
-//           'user-management' => [
-//               'class' => 'webvimark\modules\UserManagement\UserManagementModule',
-//           
-//               // Optional, add any additional configuration if needed
-//               'on beforeAction' => function ($event) {
-//                   // Do something before actions, if needed
-//               },
-//           ],
-//       ],
+    'modules' => [
+        'user-management' => [
+            'class' => 'webvimark\modules\UserManagement\UserManagementModule',
+        
+            // You can also define the auth tables explicitly
+            //'auth_item_table' => 'auth_item',
+            //'auth_item_child_table' => 'auth_item_child',
+            //'auth_assignment_table' => 'auth_assignment',
+            //'auth_rule_table' => 'auth_rule',
+            
+            // Enable or disable specific functionality
+            'enableRegistration' => true, // or false
+            //'commonPermissionName' => 'commonPermission', // Define this based on your permission
+        ],
+    ],
 
         'db' => $db,
         
