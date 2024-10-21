@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "user".
@@ -127,5 +128,17 @@ class User extends \yii\db\ActiveRecord
     {
         return self::findOne($id);
     }
+
+    public function userList()
+    {
+    $query = (new Query())
+        ->select('username, status, superadmin, id')  // Select all columns
+        ->from('user');  // From the employee table
+
+    $command = $query->createCommand();
+    $results = $command->queryAll();  // Fetch all rows
+    return $results;  
+    }
+
 
 }

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "employee".
@@ -62,4 +63,27 @@ class Employee extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Lending::class, ['id_employee' => 'id_employee']);
     }
+
+    //get all employee list
+    public function getEmpList(){
+    $query = (new Query())
+        ->select('*')  // Select all columns
+        ->from('employee');  // From the employee table
+
+    $command = $query->createCommand();
+    $results = $command->queryAll();  // Fetch all rows
+    return $results;
+    }
+
+    public function getEmpNameList(){
+        $query = (new Query())
+            ->select('emp_name')  // Select all columns
+            ->from('employee');  // From the employee table
+    
+        $command = $query->createCommand();
+        $results = $command->queryAll();  // Fetch all rows
+        return $results;
+    }
+
+
 }

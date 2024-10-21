@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\db\Query;
 /**
  * This is the model class for table "warehouse".
  *
@@ -54,5 +54,16 @@ class Warehouse extends \yii\db\ActiveRecord
     public function getItemUnits()
     {
         return $this->hasMany(ItemUnit::class, ['id_wh' => 'id_wh']);
+    }
+
+    //get wh on a list
+    public function getWhList(){
+        $query = (new Query())
+        ->select('*')  //select name
+        ->from('warehouse');  //
+
+    $command = $query->createCommand();
+    $results = $command->queryAll();  // Fetch all rows
+    return $results;
     }
 }

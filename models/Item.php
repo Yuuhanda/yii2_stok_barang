@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "item".
@@ -56,5 +57,17 @@ class Item extends \yii\db\ActiveRecord
     public function getItemUnits()
     {
         return $this->hasMany(ItemUnit::class, ['id_item' => 'id_item']);
+    }
+
+    //get item name for item
+    public function getItemName($id_item){
+        $query = (new Query())
+            ->select('item_name')  //select name
+            ->from('item')
+            ->where("id_item = $id_item");  //
+    
+        $command = $query->createCommand();
+        $results = $command->queryAll();  // Fetch all rows
+        return $results;
     }
 }

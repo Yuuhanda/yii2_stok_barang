@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "lending".
@@ -98,5 +99,25 @@ class Lending extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public function getLendingList(){
+    $query = (new Query())
+        ->select([
+            'item_unit.serial_number',
+            'employee.emp_name',
+            'user.username',
+            'item_unit.comment',
+            'lending.date'
+        ])
+        ->from('lending')
+        ->leftJoin('employee', 'employee.id_employee = lending.id_employee')
+        ->leftJoin('item_unit', 'item_unit.id_unit = lending.id_unit')
+        ->leftJoin('user', 'user.id = lending.user_id')
+        ->where(['lending.type' => 1]);
+
+    $command = $query->createCommand();
+    $results = $command->queryAll();  // Fetch all matching rows
+    return $results;
     }
 }
