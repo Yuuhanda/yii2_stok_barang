@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "unit_log".
@@ -45,5 +46,9 @@ class UnitLog extends \yii\db\ActiveRecord
             'content' => 'Content',
             'update_at' => 'Update At',
         ];
+    }
+
+    public function getLogUnit($id_unit){
+        return self::findAll(['id_unit'=>$id_unit]);
     }
 }

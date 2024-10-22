@@ -38,7 +38,7 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_item', 'serial_number', 'condition'], 'required'],
+            [['id_item', 'condition'], 'required'],
             [['id_item', 'status', 'id_wh', 'condition'], 'integer'],
             [['comment', 'serial_number'], 'string', 'max' => 60],
             [['serial_number'], 'unique'],
@@ -115,25 +115,7 @@ class ItemUnit extends \yii\db\ActiveRecord
         return $this->hasOne(Warehouse::class, ['id_wh' => 'id_wh']);
     }
 
-    //Data for dashboard. Summary for items for each status
-    public function getDashboard(){
-    $query = (new Query())
-        ->select([
-            'item.item_name',
-            'id_item',
-            'available' => 'COUNT(CASE WHEN TRIM(status) = "1" THEN 1 END)',
-            'in_use' => 'COUNT(CASE WHEN TRIM(status) = "2" THEN 1 END)',
-            'in_repair' => 'COUNT(CASE WHEN TRIM(status) = "3" THEN 1 END)',
-            'lost' => 'COUNT(CASE WHEN TRIM(status) = "4" THEN 1 END)',
-        ])
-        ->from('item_unit')
-        ->leftJoin('item', 'item.id_item = item_unit.id_item')
-        ->groupBy("item_unit.id_item"); // Group by id_item to get counts for each item
 
-    $command = $query->createCommand();
-    $results = $command->queryAll();
-    return $results;
-    }
 
     //Data for item detail
     public function getItemDetail($id_item){
@@ -166,7 +148,7 @@ class ItemUnit extends \yii\db\ActiveRecord
     }
 
     //Get item distribution on each warehouse
-    public function getWhDisctribution($id_item){
+    public function getWhDistribution($id_item){
         $query = (new Query())
             ->select([
                 'id_wh',
@@ -199,9 +181,9 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getListAvailableLending(){
         $query = (new Query())
             ->select([
-                'item.item_name',
-                'item.SKU',
-                'item.id_item',
+                'item_name'=>'item.item_name',
+                'SKU'=>'item.SKU',
+                'id_item'=>'item.id_item',
                 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END) AS available_unit',
             ])
             ->from('item')
@@ -217,12 +199,11 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getUnitRepair(){
         $query = (new Query())
             ->select([
-                'condition_lookup.condition_name AS kondisi',
+                'condition_lookup.condition_name AS condition',
                 'item_unit.serial_number AS serial_number',
                 'item_unit.id_unit AS id_unit',
                 'status_lookup.status_name AS status',
-                'user.username AS username',
-                'warehouse.wh_name AS wh_name',
+                'user.username AS updated_by',
                 'item_unit.comment AS comment',
             ])
             ->from('item_unit')
@@ -244,12 +225,12 @@ class ItemUnit extends \yii\db\ActiveRecord
     {
         $query = (new Query())
             ->select([
-                'condition_lookup.condition_name AS kondisi',
+                'condition_lookup.condition_name AS condition',
                 'item_unit.serial_number AS serial_number',
                 'item_unit.id_unit AS id_unit',
                 'status_lookup.status_name AS status',
-                'user.username AS username',
-                'warehouse.wh_name AS wh_name',
+                'user.username AS updated_by',
+                'warehouse.wh_name AS warehouse',
                 'item_unit.comment AS comment',
             ])
             ->from('item_unit')

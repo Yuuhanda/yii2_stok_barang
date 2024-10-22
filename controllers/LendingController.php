@@ -2,11 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\ItemSearch;
+use app\models\ItemUnit;
 use app\models\Lending;
 use app\models\LendingSearch;
+use app\models\UnitSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
 
 /**
  * LendingController implements the CRUD actions for Lending model.
@@ -38,15 +42,46 @@ class LendingController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new LendingSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $searchModel = new UnitSearch();
+        $lendingModel = new Lending();
+        $lendingList = $lendingModel->getLendingList();
+    
+        // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $lendingList,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+    
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+    
 
+
+    public function actionList()
+    {
+        $searchModel = new UnitSearch();
+        $lendingModel = new ItemUnit();
+        $lendingList = $lendingModel->getListAvailableLending();
+    
+        // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $lendingList,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+    
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
     /**
      * Displays a single Lending model.
      * @param int $id_lending Id Lending
@@ -130,5 +165,15 @@ class LendingController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionLendingList(){
+        $model = new Lending();
+        $data = $model->getLendingList();
+    
+        // Return the data as JSON for DataTables
+        return $this->asJson([
+            'data' => $data,
+        ]);
     }
 }

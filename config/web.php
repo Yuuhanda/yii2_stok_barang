@@ -7,22 +7,15 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'defaultRoute' =>  'site/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-        'user' => [
-		'class' => 'webvimark\modules\UserManagement\components\UserConfig',
-
-		// Comment this if you don't want to record user logins
-		'on afterLogin' => function($event) {
-				\webvimark\modules\UserManagement\models\UserVisitLog::newVisitor($event->identity->id);
-			}
-	    ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'JXDwRfVPgTi0I4cePit8lsKDzcrE6C4h',
+            'cookieValidationKey' => '2eXxFfmVxxAAA4syZwMVGOW6xM6Sqbfj',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -49,30 +42,16 @@ $config = [
                 ],
             ],
         ],
-    'modules' => [
-        'user-management' => [
-            'class' => 'webvimark\modules\UserManagement\UserManagementModule',
-        
-            // You can also define the auth tables explicitly
-            //'auth_item_table' => 'auth_item',
-            //'auth_item_child_table' => 'auth_item_child',
-            //'auth_assignment_table' => 'auth_assignment',
-            //'auth_rule_table' => 'auth_rule',
-            
-            // Enable or disable specific functionality
-            'enableRegistration' => true, // or false
-            //'commonPermissionName' => 'commonPermission', // Define this based on your permission
-        ],
-    ],
-
         'db' => $db,
         
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+               
             ],
         ],
+
         
     ],
     'params' => $params,
