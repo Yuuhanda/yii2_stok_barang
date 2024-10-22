@@ -7,6 +7,7 @@ use app\models\LogSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\ItemUnit;
 
 /**
  * LogController implements the CRUD actions for UnitLog model.
@@ -130,5 +131,15 @@ class LogController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionViewLog($id_unit){
+        $model = new UnitLog();
+        $data = $model->getLogUnit($id_unit);
+    
+        // Return the data as JSON for DataTables
+        return $this->asJson([
+            'data' => $data,
+        ]);
     }
 }

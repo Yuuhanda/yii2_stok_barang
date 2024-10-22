@@ -104,20 +104,20 @@ class Lending extends \yii\db\ActiveRecord
     public function getLendingList(){
     $query = (new Query())
         ->select([
-            'item_unit.serial_number',
-            'employee.emp_name',
-            'user.username',
-            'item_unit.comment',
-            'lending.date'
+            'item_unit.serial_number AS serial_number',
+            'employee.emp_name AS emp_name',
+            'user.username AS username',
+            'item_unit.comment AS comment',
+            'lending.date AS date',
+            'lending.id_unit AS id_unit'
         ])
         ->from('lending')
         ->leftJoin('employee', 'employee.id_employee = lending.id_employee')
         ->leftJoin('item_unit', 'item_unit.id_unit = lending.id_unit')
         ->leftJoin('user', 'user.id = lending.user_id')
-        ->where(['lending.type' => 1]);
+        ->where(['lending.type' => 1])
+        ->all();
 
-    $command = $query->createCommand();
-    $results = $command->queryAll();  // Fetch all matching rows
-    return $results;
+        return $query;
     }
 }

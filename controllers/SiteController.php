@@ -18,9 +18,7 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'ghost-access'=> [
-			    'class' => 'webvimark\modules\UserManagement\components\GhostAccessControl',
-		    ],
+            
             'access' => [
                 'class' => AccessControl::class,
                 'only' => ['logout'],

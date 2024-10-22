@@ -10,13 +10,12 @@ use yii\grid\GridView;
 /** @var app\models\LogSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Loaning List';
+$this->title = 'Unit In-Repair';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="unit-loan-list">
+<div class="unit-repair-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -26,14 +25,16 @@ $this->params['breadcrumbs'][] = $this->title;
     'filterModel' => $searchModel,
     'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'item_name',
-            'SKU',
-            'available_unit',
+            'condition',
+            'serial_number',
+            'status',
+            'updated_by',
+            'comment',
             [
-                //'class' => 'yii\grid\ActionColumn',
-                //'urlCreator' => function ($action, $model, $key, $index, $column) {
-                //    return Url::toRoute([$action, 'id_item' => $model['id_item']]);
-                //}
+                'class' => 'yii\grid\ActionColumn',
+                'urlCreator' => function ($action, $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model['id_unit']]);
+                }
             ],
         ],
     ]); ?>

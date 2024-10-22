@@ -30,7 +30,7 @@ class Item extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['item_name', 'SKU'], 'required'],
+            [['item_name'], 'required'],
             [['item_name'], 'string', 'max' => 60],
             [['SKU'], 'string', 'max' => 50],
             [['SKU'], 'unique'],
@@ -70,4 +70,25 @@ class Item extends \yii\db\ActiveRecord
         $results = $command->queryAll();  // Fetch all rows
         return $results;
     }
+
+        //Data for dashboard. Summary for items for each status
+        public function getDashboard(){
+            $query = (new Query())
+                ->select([
+                    'item_name'=>'item.item_name',
+                    'SKU'=>'item.SKU',
+                    'available' => 'COUNT(CASE WHEN TRIM(status) = "1" THEN 1 END)',
+                    'in_use' => 'COUNT(CASE WHEN TRIM(status) = "2" THEN 1 END)',
+                    'in_repair' => 'COUNT(CASE WHEN TRIM(status) = "3" THEN 1 END)',
+                    'lost' => 'COUNT(CASE WHEN TRIM(status) = "4" THEN 1 END)',
+                    'id_item'=>'item.id_item',
+                ])
+                ->from('item_unit')
+                ->leftJoin('item', 'item.id_item = item_unit.id_item')
+                ->groupBy("item_unit.id_item"); // Group by id_item to get counts for each item
+        
+            $command = $query->createCommand();
+            $results = $command->queryAll();
+            return $results;
+            }
 }
