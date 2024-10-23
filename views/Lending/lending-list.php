@@ -1,13 +1,13 @@
 <?php
 
-use app\models\UnitLog;
+use app\models\Lending;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var app\models\LogSearch $searchModel */
+/** @var app\models\LendigSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Loaning List';
@@ -27,15 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
     'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'serial_number',
-            'emp_name',
-            'username',
+            'employee',
+            'updated_by',
             'comment',
             'date',
+            // Custom action buttons
             [
                 'class' => 'yii\grid\ActionColumn',
-                'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model['id_unit']]);
-                }
+                'template' => '{returnunit}', // Specify the buttons
+                'buttons' => [
+                    'returnunit' => function ($url, $model, $key) {
+                        // Create the "See Detail In Warehouse" button
+                        return Html::a('Return Unit', ['lending/returnunit', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
+                    },
+                ],
             ],
         ],
     ]); ?>

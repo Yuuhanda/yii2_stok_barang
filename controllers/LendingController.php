@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\ItemSearch;
 use app\models\ItemUnit;
+use app\models\Employee;
+use app\models\User;
 use app\models\Lending;
 use app\models\LendingSearch;
 use app\models\UnitSearch;
@@ -11,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ArrayDataProvider;
+use Yii;
 
 /**
  * LendingController implements the CRUD actions for Lending model.
@@ -44,7 +47,7 @@ class LendingController extends Controller
     {
         $searchModel = new UnitSearch();
         $lendingModel = new Lending();
-        $lendingList = $lendingModel->getLendingList();
+        $lendingList = $lendingModel->getListAvailableLending();
     
         // Wrap the array result in ArrayDataProvider
         $dataProvider = new ArrayDataProvider([
@@ -61,13 +64,37 @@ class LendingController extends Controller
         ]);
     }
     
+    public function actionLoanUnit($id_item)
+    {
+        $model = new \app\models\Lending();
+        $employee = \app\models\Employee::find()->all();
+        //$user = new \app\models\User();
+        $unitmodel = new \app\models\ItemUnit();
+        $avalunit = $unitmodel->getAvailableUnit($id_item);
 
+        $model->status = 2;
+
+        $emplist = \yii\helpers\ArrayHelper::map($employee, 'id_employee', 'emp_name');
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                return;
+            }
+        }
+
+        return $this->render('loan-unit', [
+            'model' => $model,
+            'avalunit' => $avalunit,
+            'emplist' => $emplist,
+        ]);
+    }
 
     public function actionList()
     {
         $searchModel = new UnitSearch();
-        $lendingModel = new ItemUnit();
-        $lendingList = $lendingModel->getListAvailableLending();
+        $lendingModel = new Lending();
+        $lendingList = $lendingModel->getLendingList();
     
         // Wrap the array result in ArrayDataProvider
         $dataProvider = new ArrayDataProvider([
@@ -77,7 +104,7 @@ class LendingController extends Controller
             ],
         ]);
     
-        return $this->render('index', [
+        return $this->render('lending-list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
