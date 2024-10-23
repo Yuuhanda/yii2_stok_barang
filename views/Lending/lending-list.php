@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'returnunit' => function ($url, $model, $key) {
                         // Create the "See Detail In Warehouse" button
-                        return Html::a('Return Unit', ['lending/returnunit', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
+                        return Html::a('Return Unit', ['lending/return-unit', 'id_lending' => $model['id_lending']], ['class' => 'btn btn-primary']);
                     },
                 ],
             ],

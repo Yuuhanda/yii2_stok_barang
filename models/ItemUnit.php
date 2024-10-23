@@ -172,8 +172,9 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getAvailableUnit($id_item){
         $query = (new Query())
         ->select('serial_number, condition_lookup.condition_name, id_unit')
+        ->from('item_unit')
         ->leftJoin('condition_lookup', 'item_unit.condition = condition_lookup.id_condition')
-        ->where("item_unit.status = 1 AND item_condition.id_item = $id_item")
+        ->where("item_unit.status = 1 AND item_unit.id_item = $id_item")
         ->groupBy('item_unit.serial_number');
         $command = $query->createCommand();
         $results = $command->queryAll();

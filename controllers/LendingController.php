@@ -14,6 +14,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ArrayDataProvider;
 use Yii;
+use app\models\Warehouse;
 
 /**
  * LendingController implements the CRUD actions for Lending model.
@@ -72,15 +73,13 @@ class LendingController extends Controller
         $unitmodel = new \app\models\ItemUnit();
         $avalunit = $unitmodel->getAvailableUnit($id_item);
 
-        $model->status = 2;
-
+        $model->type = 1;
+        
         $emplist = \yii\helpers\ArrayHelper::map($employee, 'id_employee', 'emp_name');
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                // form inputs are valid, do something here
-                return;
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Save the model here or handle it as needed
+            return;
         }
 
         return $this->render('loan-unit', [
@@ -122,6 +121,31 @@ class LendingController extends Controller
         ]);
     }
 
+    public function actionReturnUnit($id_lending){
+        $warehouses = \app\models\Warehouse::find()->all();
+        // Prepare warehouse data as [id_wh => wh_name] for the dropdown
+        $whList = \yii\helpers\ArrayHelper::map(Warehouse::find()->all(), 'id_wh', 'wh_name');
+
+        $model = new \app\models\Lending();
+        $lentunit = \app\models\Lending::findOne($id_lending);
+        $model->type = 2;
+        $model->id_lending = $id_lending;
+        $model->id_employee = $lentunit->id_employee;
+        $model->user_id = 1;
+        $model->id_unit = $lentunit->id_unit;
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                return;
+            }
+        }
+
+        return $this->render('return-unit', [
+            'model' => $model,
+            'whList' => $whList,
+    ]);
+    }
     /**
      * Creates a new Lending model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -130,20 +154,29 @@ class LendingController extends Controller
     public function actionCreate()
     {
         $model = new Lending();
-
+    
         if ($this->request->isPost) {
+            $model->date = date('Y-m-d');
+            $model->user_id = 1;
             if ($model->load($this->request->post()) && $model->save()) {
+                // Update the item_unit status where id_unit matches the one in the Lending model
+                $itemUnit = ItemUnit::findOne($model->id_unit); // Assuming you have id_unit in the Lending model
+                if ($itemUnit !== null) {
+                    $itemUnit->status = 2; // Update the status
+                    $itemUnit->save(); // Save the changes
+                }
+    
                 return $this->redirect(['view', 'id_lending' => $model->id_lending]);
             }
         } else {
             $model->loadDefaultValues();
         }
-
+    
         return $this->render('create', [
             'model' => $model,
         ]);
     }
-
+    
     /**
      * Updates an existing Lending model.
      * If update is successful, the browser will be redirected to the 'view' page.
