@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use app\models\ItemUnit;
 
 /**
  * This is the model class for table "lending".
@@ -109,7 +110,8 @@ class Lending extends \yii\db\ActiveRecord
             'user.username AS updated_by',
             'item_unit.comment AS comment',
             'lending.date AS date',
-            'lending.id_unit AS id_unit'
+            'lending.id_unit AS id_unit',
+            'lending.id_lending AS id_lending',
         ])
         ->from('lending')
         ->leftJoin('employee', 'employee.id_employee = lending.id_employee')
@@ -137,5 +139,15 @@ class Lending extends \yii\db\ActiveRecord
         $command = $query->createCommand();
         $results = $command->queryAll();  // Fetch the results
         return $results;
+    }
+
+    public function getWarehouse()
+    {
+        return $this->hasOne(Warehouse::class, ['id_wh' => 'id_wh']); // Replace with correct field names
+    }
+
+    public function getItemStatus()
+    {
+        return $this->hasOne(ItemUnit::class, ['id_unit' => 'id_item']);
     }
 }

@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'condition')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'status')->hiddenInput()->label(false) ?>
         <!-- Dropdown for warehouses: visible wh_name but stores id_wh -->
-        <?= $form->field($model, 'id_wh')->dropDownList($whList, ['prompt' => 'Select Warehouse'])->label('Warehouse Name') ?>
+        <?= $form->field($model, 'warehouse')->dropDownList($whList, ['prompt' => 'Select Warehouse'])->label('Warehouse Name') ?>
 
         <?= $form->field($model, 'comment') ?>
         <?= $form->field($model, 'serial_number') ?>
