@@ -121,13 +121,13 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getItemDetail($id_item){
         $query = (new Query())
             ->select([
-                'condition_lookup.condition_name AS kondisi',
+                'condition_lookup.condition_name AS condition',
                 'item_unit.serial_number AS serial_number',
                 'item_unit.id_unit AS id_unit',
                 'status_lookup.status_name AS status',
                 'user.username AS username',
-                'warehouse.wh_name AS wh_name',
-                'employee.emp_name AS emp_name',
+                'warehouse.wh_name AS warehouse',
+                'employee.emp_name AS employee',
                 'item_unit.comment AS comment',
             ])
             ->from('item_unit')
@@ -151,13 +151,16 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getWhDistribution($id_item){
         $query = (new Query())
             ->select([
-                'id_wh',
+                'warehouse'=>'warehouse.wh_name',
                 'available' => 'COUNT(CASE WHEN TRIM(status) = "1" THEN 1 END)',
+                'in_use' => 'COUNT(CASE WHEN TRIM(status) = "2" THEN 1 END)',
+                'in_repair' => 'COUNT(CASE WHEN TRIM(status) = "3" THEN 1 END)',
                 'lost' => 'COUNT(CASE WHEN TRIM(status) = "4" THEN 1 END)',
             ])
             ->from('item_unit')
+            ->leftJoin('warehouse', 'warehouse.id_wh=item_unit.id_wh')
             ->where("item_unit.id_item=$id_item")
-            ->groupBy('id_wh'); // Group by warehouse id
+            ->groupBy('warehouse'); // Group by warehouse id
 
         $command = $query->createCommand();
         $results = $command->queryAll();
@@ -177,23 +180,7 @@ class ItemUnit extends \yii\db\ActiveRecord
         return $results;
     }
 
-    //for unit list and available unit in lending page
-    public function getListAvailableLending(){
-        $query = (new Query())
-            ->select([
-                'item_name'=>'item.item_name',
-                'SKU'=>'item.SKU',
-                'id_item'=>'item.id_item',
-                'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END) AS available_unit',
-            ])
-            ->from('item')
-            ->leftJoin('item_unit', 'item_unit.id_item = item.id_item')
-            ->groupBy('item.id_item');
 
-        $command = $query->createCommand();
-        $results = $command->queryAll();  // Fetch the results
-        return $results;
-    }
 
     //get unit in repair list
     public function getUnitRepair(){

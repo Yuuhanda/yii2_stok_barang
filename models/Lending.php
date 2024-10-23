@@ -105,8 +105,8 @@ class Lending extends \yii\db\ActiveRecord
     $query = (new Query())
         ->select([
             'item_unit.serial_number AS serial_number',
-            'employee.emp_name AS emp_name',
-            'user.username AS username',
+            'employee.emp_name AS employee',
+            'user.username AS updated_by',
             'item_unit.comment AS comment',
             'lending.date AS date',
             'lending.id_unit AS id_unit'
@@ -119,5 +119,23 @@ class Lending extends \yii\db\ActiveRecord
         ->all();
 
         return $query;
+    }
+
+    //for unit list and available unit in lending page
+    public function getListAvailableLending(){
+        $query = (new Query())
+            ->select([
+                'item_name'=>'item.item_name',
+                'SKU'=>'item.SKU',
+                'id_item'=>'item.id_item',
+                'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END) AS available_unit',
+            ])
+            ->from('item')
+            ->leftJoin('item_unit', 'item_unit.id_item = item.id_item')
+            ->groupBy('item.id_item');
+
+        $command = $query->createCommand();
+        $results = $command->queryAll();  // Fetch the results
+        return $results;
     }
 }

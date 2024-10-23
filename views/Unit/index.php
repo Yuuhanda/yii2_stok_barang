@@ -1,13 +1,15 @@
 <?php
 
 use app\models\ItemUnit;
+use app\models\Item;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use app\controllers\UnitController;
 
 /** @var yii\web\View $this */
-/** @var app\models\UnitSearch $searchModel */
+/** @var app\models\Itemearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Item Units';
@@ -28,20 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id_unit',
-            'id_item',
-            'status',
-            'id_wh',
-            'comment',
-            //'serial_number',
-            //'condition',
-            //'updated_by',
+            
+            'item_name',
+            'SKU',
+            'available',
+            
+            // Custom action buttons
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, ItemUnit $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_unit' => $model->id_unit]);
-                 }
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{addunit}', // Specify the buttons
+                'buttons' => [
+                    'addunit' => function ($url, $model, $key) {
+                        // Create the "See Detail In Warehouse" button
+                        return Html::a('Add New Unit', ['unit/add-unit', 'id_item' => $model['id_item']], ['class' => 'btn btn-primary']);
+                    },
+                ],
             ],
         ],
     ]); ?>

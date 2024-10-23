@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use app\models\ItemUnit;
 
 /**
  * This is the model class for table "item".
@@ -77,14 +78,14 @@ class Item extends \yii\db\ActiveRecord
                 ->select([
                     'item_name'=>'item.item_name',
                     'SKU'=>'item.SKU',
-                    'available' => 'COUNT(CASE WHEN TRIM(status) = "1" THEN 1 END)',
-                    'in_use' => 'COUNT(CASE WHEN TRIM(status) = "2" THEN 1 END)',
-                    'in_repair' => 'COUNT(CASE WHEN TRIM(status) = "3" THEN 1 END)',
-                    'lost' => 'COUNT(CASE WHEN TRIM(status) = "4" THEN 1 END)',
+                    'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END)',
+                    'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
+                    'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
+                    'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
                     'id_item'=>'item.id_item',
                 ])
-                ->from('item_unit')
-                ->leftJoin('item', 'item.id_item = item_unit.id_item')
+                ->from('item')
+                ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
                 ->groupBy("item_unit.id_item"); // Group by id_item to get counts for each item
         
             $command = $query->createCommand();

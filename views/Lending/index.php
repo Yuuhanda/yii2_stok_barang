@@ -29,11 +29,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'item_name',
             'SKU',
             'available_unit',
+            // Custom action buttons
             [
-                //'class' => 'yii\grid\ActionColumn',
-                //'urlCreator' => function ($action, $model, $key, $index, $column) {
-                //    return Url::toRoute([$action, 'id_item' => $model['id_item']]);
-                //}
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{loanunit}', // Specify the buttons
+                'buttons' => [
+                    'loanunit' => function ($url, $model, $key) {
+                        // Create the "See Detail In Warehouse" button
+                        return Html::a('Loan A Unit', ['lending/loanunit', 'id_item' => $model['id_item']], ['class' => 'btn btn-primary']);
+                    },
+                ],
             ],
         ],
     ]); ?>

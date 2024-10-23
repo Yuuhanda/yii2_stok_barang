@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use Yii;
 use app\models\Item;
 use yii\data\ArrayDataProvider;
+use app\models\ItemSearch;
 
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
@@ -41,8 +42,17 @@ class UnitController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UnitSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $itemModel = new Item;
+        $searchModel = new ItemSearch();
+        $dataProvider = $itemModel->getDashboard();
+
+       // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $dataProvider,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -101,7 +111,33 @@ class UnitController extends Controller
         ]);
     }
 
+    public function actionAddUnit($id_item)
+    {
+        $model = new \app\models\ItemUnit();
+        
+        // Set the $id_item in the model
+        $model->id_item = $id_item;
+        $model->condition = 1;  // Default value for 'condition'
+        $model->status = 1;     // Default value for 'status'
 
+        $warehouses = \app\models\Warehouse::find()->all();
+
+        // Prepare warehouse data as [id_wh => wh_name] for the dropdown
+        $whList = \yii\helpers\ArrayHelper::map($warehouses, 'id_wh', 'wh_name');
+    
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                return;
+            }
+        }
+    
+        return $this->render('add-unit', [
+            'model' => $model,
+            'whList' => $whList,
+        ]);
+    }
+    
     /**
      * Creates a new ItemUnit model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -120,8 +156,8 @@ class UnitController extends Controller
                     $item = Item::findOne($model->id_item);
                     if ($item !== null) {
                         // Generate serial number using first 4 characters of SKU
-                        $skuPrefix = substr($item->sku, 0, 4);
-                        $model->serial_number = $skuPrefix . "-" . rand(1000, 9999) . "-" . time(); // Example serial number format
+                        $serial_numberprefix = substr($item->SKU, 0, 4);
+                        $model->serial_number = $serial_numberprefix . "-" . rand(10, 1000) ; // Example serial number format
                     }
                 }
     

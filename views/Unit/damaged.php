@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\models\LogSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Unit Damaged';
+$this->title = 'Damaged Unit';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="unit-log-index">
@@ -31,11 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_by',
             'warehouse',
             'comment',
+            // Custom action buttons
             [
                 'class' => 'yii\grid\ActionColumn',
-                'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model['id_unit']]);
-                }
+                'template' => '{sendrepair}', // Specify the buttons
+                'buttons' => [
+                    'sendrepair' => function ($url, $model, $key) {
+                        // Create the "See Detail In Warehouse" button
+                        return Html::a('Send Unit To Repair', ['unit/sendrepair', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
+                    },
+                ],
             ],
         ],
     ]); ?>

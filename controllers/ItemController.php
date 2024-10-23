@@ -8,6 +8,10 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
+use yii\data\ArrayDataProvider;
+use app\models\ItemUnit;
+use app\models\UnitSearch;
+use app\models\WarehouseSearch;
 
 /**
  * ItemController implements the CRUD actions for Item model.
@@ -39,10 +43,57 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
+        $itemModel = new Item;
         $searchModel = new ItemSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = $itemModel->getDashboard();
+
+       // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $dataProvider,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionDetails($id_item){
+        $itemModel = new ItemUnit;
+        $searchModel = new UnitSearch();
+        $dataProvider = $itemModel->getItemDetail($id_item);
+
+       // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $dataProvider,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        return $this->render('detail', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionWarehouse($id_item){
+        $itemModel = new ItemUnit;
+        $searchModel = new WarehouseSearch();
+        $dataProvider = $itemModel->getWhDistribution($id_item);
+
+       // Wrap the array result in ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $dataProvider,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        return $this->render('whdist', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -69,28 +120,27 @@ class ItemController extends Controller
     public function actionCreate()
     {
         $model = new Item();
-    
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 // Check if SKU is empty
-                if (empty($model->sku)) {
+                if (empty($model->SKU)) {
                     $randomStr = Yii::$app->security->generateRandomString(4); // Generate random string
-                    $model->sku = $randomStr . "-" . rand(1, 100) . "-" . time(); // Create SKU with random string
+                    $model->SKU = $randomStr . "-" . rand(1, 100) . "-" . time(); // Create SKU with random string
                 }
-    
+
                 // Save the model and redirect if successful
                 if ($model->save()) {
                     return $this->redirect(['view', 'id_item' => $model->id_item]);
                 }
             }
-        } else {
-            $model->loadDefaultValues();
         }
-    
+
         return $this->render('create', [
             'model' => $model,
         ]);
     }
+
     
 
     /**

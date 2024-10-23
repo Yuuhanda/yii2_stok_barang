@@ -55,12 +55,11 @@ echo Nav::widget([
             'items' => [
                 ['label' => 'Unit Loaning', 'url' => ['/lending/index']],
                 ['label' => 'Loaning List', 'url' => ['/lending/list']],
-                ['label' => 'Return Unit', 'url' => ['/lending/return']],
             ],
         ],
         // Unit Damaged & In-Repair Dropdown
         [
-            'label' => 'Unit Damaged & In-Repair',
+            'label' => 'Damaged & In-Repair Unit',
             'items' => [
                 ['label' => 'Damaged Unit', 'url' => ['/unit/damaged']],
                 ['label' => 'Unit In-Repair', 'url' => ['/unit/repair']],

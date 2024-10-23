@@ -32,9 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'comment',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model['id_unit']]);
-                }
+                'template' => '{repairdone}', // Specify the buttons
+                'buttons' => [
+                    'repairdone' => function ($url, $model, $key) {
+                        // Create the "See Detail In Warehouse" button
+                        return Html::a('Finish Repair', ['unit/repairdone', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
+                    },
+                ],
             ],
         ],
     ]); ?>
