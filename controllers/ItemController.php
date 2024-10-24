@@ -12,6 +12,7 @@ use yii\data\ArrayDataProvider;
 use app\models\ItemUnit;
 use app\models\UnitSearch;
 use app\models\WarehouseSearch;
+use yii\web\UploadedFile;
 
 /**
  * ItemController implements the CRUD actions for Item model.
@@ -51,7 +52,7 @@ class ItemController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $dataProvider,
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 100,
             ],
         ]);
 
@@ -123,15 +124,26 @@ class ItemController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
+                 // Get the uploaded file instance
+                
+                
                 // Check if SKU is empty
                 if (empty($model->SKU)) {
                     $randomStr = Yii::$app->security->generateRandomString(4); // Generate random string
                     $model->SKU = $randomStr . "-" . rand(1, 100) . "-" . time(); // Create SKU with random string
                 }
-
+                //$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                //if (!$model->imageFile || !$model->imageFile->tempName) {
+                //    // If imageFile is null or doesn't have a tempName, the file wasn't uploaded correctly
+                //    Yii::error('File upload failed.');
+                //    return false;
+                //}
+                
+                //if ($model->upload()) {
                 // Save the model and redirect if successful
                 if ($model->save()) {
                     return $this->redirect(['view', 'id_item' => $model->id_item]);
+                //}
                 }
             }
         }

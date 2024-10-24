@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Query;
 use app\models\ItemUnit;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "item".
@@ -20,6 +21,8 @@ class Item extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $imageFile;
+    
     public static function tableName()
     {
         return 'item';
@@ -35,9 +38,28 @@ class Item extends \yii\db\ActiveRecord
             [['item_name'], 'string', 'max' => 60],
             [['SKU'], 'string', 'max' => 50],
             [['SKU'], 'unique'],
+            ['imageFile', 'file', 'extensions' => 'jpg, jpeg, png', 'skipOnEmpty' => true, 'maxSize' => 1024 * 1024 * 5],
         ];
     }
+    
+    public function upload()
+    {
+        if ($this->validate()) {
+            $uploadPath = 'uploads/';
+            
+            // Check if directory exists, if not create it
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true); // Create the directory with permissions
+            }
+        
+            // Save the uploaded file using $this->imageFile
+            $this->imageFile->saveAs($uploadPath . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        }
+        return false;
+    }
 
+    
     /**
      * {@inheritdoc}
      */
@@ -86,7 +108,7 @@ class Item extends \yii\db\ActiveRecord
                 ])
                 ->from('item')
                 ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
-                ->groupBy("item_unit.id_item"); // Group by id_item to get counts for each item
+                ->groupBy("item.id_item"); // Group by id_item to get counts for each item
         
             $command = $query->createCommand();
             $results = $command->queryAll();

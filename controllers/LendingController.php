@@ -121,31 +121,7 @@ class LendingController extends Controller
         ]);
     }
 
-    public function actionReturnUnit($id_lending){
-        $warehouses = \app\models\Warehouse::find()->all();
-        // Prepare warehouse data as [id_wh => wh_name] for the dropdown
-        $whList = \yii\helpers\ArrayHelper::map(Warehouse::find()->all(), 'id_wh', 'wh_name');
 
-        $model = new \app\models\Lending();
-        $lentunit = \app\models\Lending::findOne($id_lending);
-        $model->type = 2;
-        $model->id_lending = $id_lending;
-        $model->id_employee = $lentunit->id_employee;
-        $model->user_id = 1;
-        $model->id_unit = $lentunit->id_unit;
-
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                // form inputs are valid, do something here
-                return;
-            }
-        }
-
-        return $this->render('return-unit', [
-            'model' => $model,
-            'whList' => $whList,
-    ]);
-    }
     /**
      * Creates a new Lending model.
      * If creation is successful, the browser will be redirected to the 'view' page.

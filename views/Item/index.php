@@ -32,6 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'item_name',
             'SKU',
             'available',
+            'in_use',
+            'in_repair',
+            'lost',
             
             // Custom action buttons
             [

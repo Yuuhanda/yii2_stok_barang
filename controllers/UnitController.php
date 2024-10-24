@@ -11,7 +11,10 @@ use Yii;
 use app\models\Item;
 use yii\data\ArrayDataProvider;
 use app\models\ItemSearch;
-
+use app\models\Warehouse;
+use app\models\Lending;
+use yii\web\HttpException;
+use yii\web\BadRequestHttpException;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -34,6 +37,7 @@ class UnitController extends Controller
             ]
         );
     }
+
 
     /**
      * Lists all ItemUnit models.
@@ -120,7 +124,7 @@ class UnitController extends Controller
         $model->condition = 1;  // Default value for 'condition'
         $model->status = 1;     // Default value for 'status'
 
-        $warehouses = \app\models\Warehouse::find()->all();
+        $warehouses = Warehouse::find()->all();
 
         // Prepare warehouse data as [id_wh => wh_name] for the dropdown
         $whList = \yii\helpers\ArrayHelper::map($warehouses, 'id_wh', 'wh_name');
@@ -137,6 +141,82 @@ class UnitController extends Controller
             'whList' => $whList,
         ]);
     }
+    
+
+    public function actionReturnUnit($id_unit)  
+    {
+        
+        $unit = \app\models\ItemUnit::findOne(['id_unit'=>$id_unit]);
+        $model = new \app\models\ItemUnit();
+        if (!$unit) {
+            throw new NotFoundHttpException('The requested ItemUnit does not exist.');
+        }
+        $model->id_unit = $id_unit;
+        $model->status = 1;
+        $model->id_item = $unit->id_item;
+        $model->serial_number = $unit->serial_number;
+        
+        $warehouses = Warehouse::find()->all();
+        $whList = \yii\helpers\ArrayHelper::map($warehouses, 'id_wh', 'wh_name');
+
+        // Condition lookup
+        $condition = \app\models\ConditionLookup::find()->all();
+        $condlist = \yii\helpers\ArrayHelper::map($condition, 'id_condition', 'condition_name');
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                return;
+            }
+        }
+
+        return $this->render('return-unit', [
+            'model' => $model,
+            'whList' => $whList,
+            'condlist' => $condlist,
+        ]);
+    }
+
+
+    public function actionUpdateReturn($id_unit)
+    {
+        // Check if 'id_unit' is posted
+        $id_unit = $id_unit;
+        
+        // Debugging: Check if id_unit is being passed
+        
+
+        // Load the ItemUnit model using id_unit
+        $unit = ItemUnit::findOne($id_unit);
+        $model = new ItemUnit();
+        // Check if model is found
+        if (!$unit) {
+            throw new NotFoundHttpException("The requested ItemUnit with id_unit = {$id_unit} does not exist.");
+        }
+    
+        if ($this->request->isPost) {
+            // Update the current ItemUnit record
+            $date = date('Y-m-d');
+            $model->status = 1;
+            if ($model->load($this->request->post()) && $model->save()) {
+                // Find the newest lending row related to this unit
+                $lending = Lending::find()->where(['id_unit' => $model->id_unit])
+                ->orderBy(['id_lending' => SORT_DESC]) // Get the latest entry
+                ->one();
+            
+                if ($lending) {
+                    // Update the existing Lending record
+                    $lending->type = 2; // Set type to 2 for return
+                    $lending->date = $date; // Update the date if needed
+                    $lending->save(false); // Save the changes without validation
+                }
+            
+            }
+        }
+    
+        return $this->redirect(['index']); // Redirect to index after processing
+    }
+    
     
     /**
      * Creates a new ItemUnit model.

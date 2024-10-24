@@ -8,11 +8,12 @@ use yii\widgets\ActiveForm;
 /** @var ActiveForm $form */
 /** @var array $emplist */
 /** @var array $avalunit */
-
+$this->title = 'Loan A Unit';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="loan-unit">
-
+<h1><?= Html::encode($this->title) ?></h1>
     <?php $form = ActiveForm::begin(['action' => ['lending/create']]); ?>
 
     <!-- Dropdown for available units -->
