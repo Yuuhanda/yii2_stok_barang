@@ -100,7 +100,7 @@ class Item extends \yii\db\ActiveRecord
                 ->select([
                     'item_name'=>'item.item_name',
                     'SKU'=>'item.SKU',
-                    'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END)',
+                    'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END)',
                     'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
                     'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
                     'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
