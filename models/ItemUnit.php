@@ -174,7 +174,7 @@ class ItemUnit extends \yii\db\ActiveRecord
         ->select('serial_number, condition_lookup.condition_name, id_unit')
         ->from('item_unit')
         ->leftJoin('condition_lookup', 'item_unit.condition = condition_lookup.id_condition')
-        ->where("item_unit.status = 1 AND item_unit.id_item = $id_item")
+        ->where("item_unit.status = 1 AND item_unit.condition != 4 AND item_unit.condition != 5 AND item_unit.id_item = $id_item")
         ->groupBy('item_unit.serial_number');
         $command = $query->createCommand();
         $results = $command->queryAll();

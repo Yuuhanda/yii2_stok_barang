@@ -130,7 +130,7 @@ class Lending extends \yii\db\ActiveRecord
                 'item_name'=>'item.item_name',
                 'SKU'=>'item.SKU',
                 'id_item'=>'item.id_item',
-                'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END) AS available_unit',
+                'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END) AS available_unit',
             ])
             ->from('item')
             ->leftJoin('item_unit', 'item_unit.id_item = item.id_item')
