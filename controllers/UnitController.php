@@ -77,6 +77,26 @@ class UnitController extends Controller
         ]);
     }
 
+    	   /**
+    * Creates a new ItemUnit model.
+    * If creation is successful, the browser will be redirected to the 'view' page.
+    * @return string|\yii\web\Response
+    */
+   public function actionCreate()
+   {
+       $model = new ItemUnit();
+       if ($this->request->isPost) {
+           if ($model->load($this->request->post()) && $model->save()) {
+               return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+           }
+       } else {
+           $model->loadDefaultValues();
+       }
+       return $this->render('create', [
+           'model' => $model,
+       ]);
+   }
+
     public function actionDamaged(){
         $unitModel = new ItemUnit();
         $searchModel = new UnitSearch();
@@ -131,8 +151,25 @@ class UnitController extends Controller
     
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
-                // form inputs are valid, do something here
-                return;
+                if ($model->serial_number == NULL) {
+                    $item = Item::findOne($model->id_item);
+                    
+                    if ($item !== null && !empty($item->SKU)) {
+                        // Get the first 3 characters of the SKU
+                        $skuPrefix = substr($item->SKU, 0, 3);
+                        
+                        // Generate a 4-digit random number
+                        $randomNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+                        
+                        // Combine the SKU prefix and the random number to create the serial number
+                        $model->serial_number = $skuPrefix . $randomNumber;
+                    } else {
+                        throw new \yii\web\NotFoundHttpException("Item not found or SKU is empty.");
+                    }
+                }
+            $model->save();
+            return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+            return;
             }
         }
     
@@ -167,7 +204,8 @@ class UnitController extends Controller
                 } else {
                     $model->status = 1;
                 }
-
+                $user_id = 1;
+                $model->updated_by = $user_id;
                 // Save the ItemUnit model after setting the status
                 if ($model->save(false)) {
                     // Find the latest Lending record for this unit
@@ -181,8 +219,10 @@ class UnitController extends Controller
                         $lending->type = 2; // Set type to 2 for return
                         $lending->date = $date; // Update the date
                         $lending->save(false); // Save the changes without validation
+                    
                     }
-
+                    $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
+                    $logController->actionReturnLog($model->id_unit, $user_id);
                     return $this->redirect(['view', 'id_unit' => $model->id_unit]);
                 }
             }

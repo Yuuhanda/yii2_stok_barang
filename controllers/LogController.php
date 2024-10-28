@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\Employee;
 use app\models\UnitLog;
 use app\models\LogSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\ItemUnit;
+use app\models\User;
+use DateTime;
+use Yii;
 
 /**
  * LogController implements the CRUD actions for UnitLog model.
@@ -83,6 +87,39 @@ class LogController extends Controller
         ]);
     }
 
+    public function actionLendingLog($id_unit, $id_employee)
+    {
+        $model = new UnitLog();
+        
+        // Get the serial number from the ItemUnit
+        $unit = ItemUnit::findOne($id_unit);
+        if (!$unit) {
+            throw new \yii\web\NotFoundHttpException("Unit not found.");
+        }
+        $sn = $unit->serial_number;
+    
+        // Get the employee name
+        $emp = Employee::findOne($id_employee);
+        if (!$emp) {
+            throw new \yii\web\NotFoundHttpException("Employee not found.");
+        }
+        $emp_name = $emp->emp_name;
+    
+        // Set log fields
+        $model->id_unit = $id_unit;
+        $model->content = "Unit $sn lent to $emp_name";
+        $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
+    
+        // Try saving and check for errors
+        if ($model->save()) {
+            return true; // Save was successful
+        } else {
+            // Save failed, output validation errors
+            Yii::error($model->getErrors(), __METHOD__);
+            throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
+        }
+    }
+    
     /**
      * Updates an existing UnitLog model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -141,5 +178,71 @@ class LogController extends Controller
         return $this->asJson([
             'data' => $data,
         ]);
+    }
+
+    public function actionReturnLog($id_unit, $id_employee)
+    {
+        $model = new UnitLog();
+        
+        // Get the serial number from the ItemUnit
+        $unit = ItemUnit::findOne($id_unit);
+        if (!$unit) {
+            throw new \yii\web\NotFoundHttpException("Unit not found.");
+        }
+        $sn = $unit->serial_number;
+    
+        // Get the employee name
+        $emp = Employee::findOne($id_employee);
+        if (!$emp) {
+            throw new \yii\web\NotFoundHttpException("Employee not found.");
+        }
+        $emp_name = $emp->emp_name;
+    
+        // Set log fields
+        $model->id_unit = $id_unit;
+        $model->content = "Unit $sn returned by $emp_name";
+        $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
+    
+        // Try saving and check for errors
+        if ($model->save()) {
+            return true; // Save was successful
+        } else {
+            // Save failed, output validation errors
+            Yii::error($model->getErrors(), __METHOD__);
+            throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
+        }
+    }
+
+    public function actionRepairLog($id_unit, $user_id)
+    {
+        $model = new UnitLog();
+        
+        // Get the serial number from the ItemUnit
+        $unit = ItemUnit::findOne($id_unit);
+        if (!$unit) {
+            throw new \yii\web\NotFoundHttpException("Unit not found.");
+        }
+        $sn = $unit->serial_number;
+    
+        // Get the employee name
+        $emp = User::findOne($user_id);
+        if (!$emp) {
+            throw new \yii\web\NotFoundHttpException("Employee not found.");
+        }
+        $emp_name = $emp->username;
+    
+        // Set log fields
+        $model->id_unit = $id_unit;
+        $model->content = "Unit $sn sent for repair by $emp_name";
+        $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
+    
+        // Try saving and check for errors
+        if ($model->save()) {
+            return true; // Save was successful
+        } else {
+            // Save failed, output validation errors
+            Yii::error($model->getErrors(), __METHOD__);
+            throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
+        }
     }
 }

@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="add-unit">
 <h1><?= Html::encode($this->title) ?></h1>
-    <?php $form = ActiveForm::begin(['action' => ['unit/create']]); ?>
+    <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model, 'id_item')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'condition')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'status')->hiddenInput()->label(false) ?>

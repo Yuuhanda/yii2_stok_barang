@@ -30,7 +30,8 @@ class UnitLog extends \yii\db\ActiveRecord
     {
         return [
             [['id_unit', 'content', 'update_at'], 'required'],
-            [['id_unit', 'content'], 'integer'],
+            [['id_unit'], 'integer'],
+            [['content'],'string'],
             [['update_at'], 'safe'],
         ];
     }

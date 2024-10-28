@@ -141,7 +141,8 @@ class LendingController extends Controller
                     $itemUnit->status = 2; // Update the status
                     $itemUnit->save(); // Save the changes
                 }
-    
+                $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
+                $logController->actionLendingLog($model->id_unit, $model->id_employee); // Call with correct parameters
                 return $this->redirect(['view', 'id_lending' => $model->id_lending]);
             }
         } else {
