@@ -179,4 +179,27 @@ class UserController extends Controller
             }
         }
     }
+
+    public function actionToggleStatus($id) {
+        // Corrected the findOne syntax to use an array
+        $user = User::findOne($id);
+    
+        // Check if the user was found
+        if ($user !== null) {
+            // Toggle status
+            $user->status = $user->status == 1 ? 0 : 1;
+    
+            // Attempt to save the user model
+            if ($user->save()) {
+                Yii::$app->session->setFlash('success', 'User status updated successfully.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Failed to update user status.');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'User not found.');
+        }
+    
+        return $this->redirect(['index']);
+    }
+    
 }

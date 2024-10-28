@@ -8,7 +8,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+use app\models\ItemUnit;
+use Yii;
 /**
  * WarehouseController implements the CRUD actions for Warehouse model.
  */
@@ -127,10 +128,26 @@ class WarehouseController extends Controller
      */
     public function actionDelete($id_wh)
     {
-        $this->findModel($id_wh)->delete();
-
+        // Find any item units associated with the warehouse
+        $unitsExist = $this->findUnit($id_wh);
+        
+        // Check if there are any units associated with the warehouse
+        if (!$unitsExist) {
+            // If no units exist, delete the warehouse
+            $this->findModel($id_wh)->delete();
+            
+            // Set a success notification
+            Yii::$app->session->setFlash('success', 'Warehouse data deleted successfully.');
+        } else {
+            // Set an error notification if there are still item units in the warehouse
+            Yii::$app->session->setFlash('error', 'Warehouse still has units of item inside.');
+        }
+        
+        // Redirect to the index page
         return $this->redirect(['index']);
     }
+    
+    
 
     /**
      * Finds the Warehouse model based on its primary key value.
@@ -147,4 +164,12 @@ class WarehouseController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    protected function findUnit($id_wh)
+    {
+        // Check if there are any ItemUnit records with the given warehouse ID (id_wh)
+        return ItemUnit::find()->where(['id_wh' => $id_wh])->exists();
+    }
+    
+
 }
