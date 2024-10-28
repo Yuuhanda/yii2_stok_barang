@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'comment',
             [
                 'class' => 'yii\grid\ActionColumn',
+                'header' => 'Action', 
                 'template' => '{repairdone}', // Specify the buttons
                 'buttons' => [
                     'repairdone' => function ($url, $model, $key) {

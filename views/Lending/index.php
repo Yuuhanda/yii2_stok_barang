@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{loanunit}', // Specify the buttons
+                'header' => 'Action', 
                 'buttons' => [
                     'loanunit' => function ($url, $model, $key) {
                         // Create the "See Detail In Warehouse" button

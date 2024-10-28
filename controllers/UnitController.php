@@ -159,7 +159,7 @@ class UnitController extends Controller
                         $skuPrefix = substr($item->SKU, 0, 3);
                         
                         // Generate a 4-digit random number
-                        $randomNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+                        $randomNumber = str_pad(mt_rand(100, 9999), 4, '0', STR_PAD_LEFT);
                         
                         // Combine the SKU prefix and the random number to create the serial number
                         $model->serial_number = $skuPrefix . $randomNumber;
@@ -167,9 +167,9 @@ class UnitController extends Controller
                         throw new \yii\web\NotFoundHttpException("Item not found or SKU is empty.");
                     }
                 }
-            $model->save();
+            if ($model->save()){
             return $this->redirect(['view', 'id_unit' => $model->id_unit]);
-            return;
+            }
             }
         }
     
@@ -222,8 +222,8 @@ class UnitController extends Controller
                     
                     }
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
-                    $logController->actionReturnLog($model->id_unit, $user_id);
-                    return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+                    $logController->actionReturnLog($model->id_unit, $lending->id_employee);
+                    return $this->redirect(['lending/list']);
                 }
             }
         }
@@ -366,7 +366,9 @@ class UnitController extends Controller
 
             if ($model->validate()) {
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+                    $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
+                    $logController->actionRepairLog($model->id_unit, $model->updated_by);
+                    return $this->redirect(['damaged']);
                 }
                 return;
             }
@@ -400,7 +402,9 @@ class UnitController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+                    $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
+                    $logController->actionDoneRepairLog($model->id_unit, $model->updated_by);
+                    return $this->redirect(['damaged']);
                 }
                 return;
             }

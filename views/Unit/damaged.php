@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'filterModel' => $searchModel,
     'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            'condition',
             'serial_number',
             'status',
             'updated_by',
@@ -35,10 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{sendrepair}', // Specify the buttons
+                'header' => 'Action', 
                 'buttons' => [
-                    'sendrepair' => function ($url, $model, $key) {
-                        // Create the "See Detail In Warehouse" button
+                'sendrepair' => function ($url, $model, $key) {
+                    // Ensure we are checking the correct value, like a numeric ID or a specific status name
+                    if (isset($model['status']) && $model['status'] == 'Available in warehouse') { // Adjust 'Available' based on your actual status name for status = 1
                         return Html::a('Send Unit To Repair', ['unit/send-repair', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
+                    }
+                    // Return nothing if the status is not 'Available'
+                    return '';
                     },
                 ],
             ],

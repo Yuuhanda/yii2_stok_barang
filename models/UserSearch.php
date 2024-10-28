@@ -17,8 +17,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'status', 'superadmin', 'created_at', 'updated_at', 'email_confirmed'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'confirmation_token', 'registration_ip', 'bind_to_ip', 'email'], 'safe'],
+            [['id', 'status', 'superadmin', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'password_hash', 'registration_ip', 'email'], 'safe'],
         ];
     }
 
@@ -63,15 +63,10 @@ class UserSearch extends User
             'superadmin' => $this->superadmin,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'email_confirmed' => $this->email_confirmed,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'confirmation_token', $this->confirmation_token])
             ->andFilterWhere(['like', 'registration_ip', $this->registration_ip])
-            ->andFilterWhere(['like', 'bind_to_ip', $this->bind_to_ip])
             ->andFilterWhere(['like', 'email', $this->email]);
 
         return $dataProvider;

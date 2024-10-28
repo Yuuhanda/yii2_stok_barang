@@ -126,8 +126,26 @@ class ItemUnit extends \yii\db\ActiveRecord
                 'item_unit.id_unit AS id_unit',
                 'status_lookup.status_name AS status',
                 'user.username AS username',
-                'warehouse.wh_name AS warehouse',
-                'employee.emp_name AS employee',
+
+                // Show warehouse only when status is not 2
+                new \yii\db\Expression('CASE 
+                    WHEN item_unit.status != 2 THEN warehouse.wh_name 
+                    ELSE NULL 
+                END AS warehouse'),
+            
+                // Show employee name only when status is 2, from the latest lending record
+                new \yii\db\Expression('CASE 
+                    WHEN item_unit.status = 2 THEN (
+                        SELECT employee.emp_name
+                        FROM lending
+                        LEFT JOIN employee ON lending.id_employee = employee.id_employee
+                        WHERE lending.id_unit = item_unit.id_unit
+                        ORDER BY lending.id_lending DESC
+                        LIMIT 1
+                    )
+                    ELSE NULL
+                END AS employee'),
+            
                 'item_unit.comment AS comment',
             ])
             ->from('item_unit')
@@ -138,9 +156,8 @@ class ItemUnit extends \yii\db\ActiveRecord
             ->leftJoin('user', 'user.id = item_unit.updated_by')
             ->leftJoin('status_lookup', 'item_unit.status = status_lookup.id_status')
             ->leftJoin('condition_lookup', 'item_unit.condition = condition_lookup.id_condition')
-            ->where("item_unit.id_item = $id_item")
-            ->groupBy("item_unit.id_unit");
-
+            ->where(['item_unit.id_item' => $id_item])
+            ->groupBy('item_unit.id_unit');
         $command = $query->createCommand();
         $results = $command->queryAll();
 

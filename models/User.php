@@ -4,30 +4,11 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-/**
- * This is the model class for table "user".
- *
- * @property int $id
- * @property string $username
- * @property string $auth_key
- * @property string $password_hash
- * @property string|null $confirmation_token
- * @property int $status
- * @property int|null $superadmin
- * @property int $created_at
- * @property int $updated_at
- * @property string|null $registration_ip
- * @property string|null $bind_to_ip
- * @property string|null $email
- * @property int $email_confirmed
- *
- * @property AuthAssignment[] $authAssignments
- * @property AuthItem[] $itemNames
- * @property Lending[] $lendings
- * @property UserVisitLog[] $userVisitLogs
- */
-class User extends \yii\db\ActiveRecord
+
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -43,10 +24,10 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'created_at', 'updated_at'], 'required'],
-            [['status', 'superadmin', 'created_at', 'updated_at', 'email_confirmed'], 'integer'],
-            [['username', 'password_hash', 'confirmation_token', 'bind_to_ip'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
+            [['username', 'password_hash', 'created_at', 'updated_at'], 'required'],
+            [['status', 'superadmin'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'], 
+            [['username', 'password_hash',], 'string', 'max' => 255],
             [['registration_ip'], 'string', 'max' => 15],
             [['email'], 'string', 'max' => 128],
         ];
@@ -60,18 +41,19 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'username' => 'Username',
-            'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
-            'confirmation_token' => 'Confirmation Token',
             'status' => 'Status',
             'superadmin' => 'Superadmin',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'registration_ip' => 'Registration Ip',
-            'bind_to_ip' => 'Bind To Ip',
             'email' => 'Email',
-            'email_confirmed' => 'Email Confirmed',
         ];
+    }
+
+    public function getId()
+    {
+        return $this->id_user;
     }
 
     /**
@@ -116,8 +98,10 @@ class User extends \yii\db\ActiveRecord
 
     public function validatePassword($password)
     {
-        return \Yii::$app->security->validatePassword($password, $this->password);
+        // Compare the provided password with the hashed password
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
 
     public static function findByUsername($username)
     {

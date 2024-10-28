@@ -18,6 +18,7 @@ class LogSearch extends UnitLog
     {
         return [
             [['id_log', 'id_unit', 'content'], 'integer'],
+            [['content'], 'string'],
             [['update_at'], 'safe'],
         ];
     }
