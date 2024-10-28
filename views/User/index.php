@@ -44,10 +44,51 @@ $this->params['breadcrumbs'][] = $this->title;
             //'email_confirmed:email',
             [
                 'class' => ActionColumn::className(),
+                'template' => '{view} {update} {toggle-status}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        return Html::a('<i class="fas fa-eye"></i> View', $url, [
+                            'title' => Yii::t('app', 'View'),
+                            'class' => 'btn btn-primary btn-sm', // Add btn-sm for smaller buttons
+                            'aria-label' => Yii::t('app', 'View'),
+                            'data-pjax' => '0', // Disable Pjax if necessary
+                        ]);
+                    },
+                    'update' => function ($url, $model, $key) {
+                        return Html::a('<i class="fas fa-edit"></i> Edit', $url, [
+                            'title' => Yii::t('app', 'Edit'),
+                            'class' => 'btn btn-warning btn-sm', // Add btn-sm for smaller buttons
+                            'aria-label' => Yii::t('app', 'Edit'),
+                            'data-pjax' => '0', // Disable Pjax if necessary
+                        ]);
+                    },
+                    'toggle-status' => function ($url, $model, $key) {
+                        if ($model->status == 0) {
+                            return Html::a('<i class="fas fa-check"></i> Activate', $url, [
+                                'title' => Yii::t('app', 'Activate'),
+                                'class' => 'btn btn-success btn-sm',
+                                'data-confirm' => Yii::t('app', 'Are you sure you want to activate this user?'),
+                                'data-method' => 'post',
+                            ]);
+                        } elseif ($model->status == 1) {
+                            return Html::a('<i class="fas fa-ban"></i> Deactivate', $url, [
+                                'title' => Yii::t('app', 'Deactivate'),
+                                'class' => 'btn btn-danger btn-sm',
+                                'data-confirm' => Yii::t('app', 'Are you sure you want to deactivate this user?'),
+                                'data-method' => 'post',
+                            ]);
+                        }
+                    },
+                ],
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
+                    if ($action === 'toggle-status') {
+                        return Url::toRoute(['toggle-status', 'id' => $model->id]);
+                    }
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
+            
+            
         ],
     ]); ?>
 

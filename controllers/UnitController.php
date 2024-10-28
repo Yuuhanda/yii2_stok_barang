@@ -177,13 +177,13 @@ class UnitController extends Controller
                         $randomNumber = str_pad(mt_rand(100, 9999), 4, '0', STR_PAD_LEFT);
                         
                         // Combine the SKU prefix and the random number to create the serial number
-                        $model->serial_number = $skuPrefix . $randomNumber;
+                        $model->serial_number = $skuPrefix .'-'. $randomNumber;
                     } else {
                         throw new \yii\web\NotFoundHttpException("Item not found or SKU is empty.");
                     }
                 }
             if ($model->save()){
-            return $this->redirect(['view', 'id_unit' => $model->id_unit]);
+            return $this->redirect(['index']);
             }
             }
         }
