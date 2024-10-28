@@ -53,7 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getId()
     {
-        return $this->id_user;
+        return $this->id;
     }
 
     /**
@@ -125,4 +125,54 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return self::findOne(['access_token'=>$token]);
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->auth_key === $authKey;
+    }
+
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->generateAuthKey();
+            }
+            return true;
+        }
+        return false;
+    }
 }
+
+

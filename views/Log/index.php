@@ -32,13 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_log',
             'id_unit',
             'content',
-            'update_at',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, UnitLog $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_log' => $model->id_log]);
-                 }
-            ],
+            'update_at'//change label to updated at,
+            
         ],
     ]); ?>
 

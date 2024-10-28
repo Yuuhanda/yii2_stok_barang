@@ -12,6 +12,7 @@ use app\models\ItemUnit;
 use app\models\User;
 use DateTime;
 use Yii;
+use yii\filters\AccessControl;
 
 /**
  * LogController implements the CRUD actions for UnitLog model.
@@ -27,9 +28,23 @@ class LogController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]

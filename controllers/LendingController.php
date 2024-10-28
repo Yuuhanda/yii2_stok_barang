@@ -15,6 +15,7 @@ use yii\filters\VerbFilter;
 use yii\data\ArrayDataProvider;
 use Yii;
 use app\models\Warehouse;
+use yii\filters\AccessControl;
 
 /**
  * LendingController implements the CRUD actions for Lending model.
@@ -30,9 +31,23 @@ class LendingController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]

@@ -7,7 +7,6 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'defaultRoute' =>  'site/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -51,6 +50,38 @@ $config = [
             'rules' => [
                
             ],
+        ],
+        'as beforeRequest' => [
+            'class' => yii\filters\AccessControl::class,
+            'rules' => [
+                [
+                    [
+                        'allow' => true,
+                        'actions' => ['login'], // Actions allowed for guests
+                        'roles' => ['?'], // Allow guests to access these actions
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'], // Allow authenticated users
+                    ],
+                ],
+            ],
+            'denyCallback' => function ($rule, $action) {
+                return Yii::$app->response->redirect(['site/login']);
+            },
+        ],
+
+        'request' => [
+            'enableCsrfValidation' => true,
+            'cookieValidationKey' => 'your-secret-key-here',
+            // Add the custom behavior to change the default route:
+            'on beforeRequest' => function ($event) {
+                if (Yii::$app->user->isGuest) {
+                    Yii::$app->defaultRoute = 'site/login'; // If not logged in
+                } else {
+                    Yii::$app->defaultRoute = 'item/index'; // If logged in
+                }
+            },
         ],
 
         
