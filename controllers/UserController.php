@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Expression; 
 use Yii;
+use yii\filters\AccessControl;
 /**
  * UserController implements the CRUD actions for User model.
  */
@@ -23,9 +24,23 @@ class UserController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]
@@ -151,5 +166,17 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionGenerateAuthKeys()
+    {
+        $users = User::find()->all();
+        foreach ($users as $user) {
+            if (empty($user->auth_key)) {
+                $user->generateAuthKey();
+                $user->save(false);
+                echo "Generated auth_key for user ID: {$user->id}\n";
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ use app\models\WarehouseSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * WarehouseController implements the CRUD actions for Warehouse model.
@@ -22,14 +23,29 @@ class WarehouseController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]
         );
     }
+
 
     /**
      * Lists all Warehouse models.

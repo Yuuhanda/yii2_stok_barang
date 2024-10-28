@@ -15,6 +15,7 @@ use app\models\Warehouse;
 use app\models\Lending;
 use yii\web\HttpException;
 use yii\web\BadRequestHttpException;
+use yii\filters\AccessControl;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -29,9 +30,23 @@ class UnitController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]

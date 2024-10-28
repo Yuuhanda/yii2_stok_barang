@@ -13,7 +13,7 @@ use app\models\ItemUnit;
 use app\models\UnitSearch;
 use app\models\WarehouseSearch;
 use yii\web\UploadedFile;
-
+use yii\filters\AccessControl;
 /**
  * ItemController implements the CRUD actions for Item model.
  */
@@ -28,9 +28,23 @@ class ItemController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]
