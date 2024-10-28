@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // Custom action buttons
             [
                 'class' => 'yii\grid\ActionColumn',
+                'header' => 'Action', 
                 'template' => '{addunit}', // Specify the buttons
                 'buttons' => [
                     'addunit' => function ($url, $model, $key) {

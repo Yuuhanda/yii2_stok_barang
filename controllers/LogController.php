@@ -245,4 +245,37 @@ class LogController extends Controller
             throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
         }
     }
+
+    public function actionDoneRepairLog($id_unit, $user_id)
+    {
+        $model = new UnitLog();
+        
+        // Get the serial number from the ItemUnit
+        $unit = ItemUnit::findOne($id_unit);
+        if (!$unit) {
+            throw new \yii\web\NotFoundHttpException("Unit not found.");
+        }
+        $sn = $unit->serial_number;
+    
+        // Get the employee name
+        $emp = User::findOne($user_id);
+        if (!$emp) {
+            throw new \yii\web\NotFoundHttpException("Employee not found.");
+        }
+        $emp_name = $emp->username;
+    
+        // Set log fields
+        $model->id_unit = $id_unit;
+        $model->content = "Unit $sn repaired. Taken to warehouse by $emp_name";
+        $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
+    
+        // Try saving and check for errors
+        if ($model->save()) {
+            return true; // Save was successful
+        } else {
+            // Save failed, output validation errors
+            Yii::error($model->getErrors(), __METHOD__);
+            throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
+        }
+    }
 }

@@ -129,8 +129,9 @@ class ItemController extends Controller
                 
                 // Check if SKU is empty
                 if (empty($model->SKU)) {
-                    $randomStr = Yii::$app->security->generateRandomString(4); // Generate random string
-                    $model->SKU = $randomStr . "-" . rand(1, 100) . "-" . time(); // Create SKU with random string
+                    $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 4));
+                    // Generate random string
+                    $model->SKU = $randomStr . "-" . rand(1, 100); // Create SKU with random string
                 }
                 //$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                 //if (!$model->imageFile || !$model->imageFile->tempName) {
@@ -142,7 +143,7 @@ class ItemController extends Controller
                 //if ($model->upload()) {
                 // Save the model and redirect if successful
                 if ($model->save()) {
-                    return $this->redirect(['view', 'id_item' => $model->id_item]);
+                    return $this->redirect(['index']);
                 //}
                 }
             }

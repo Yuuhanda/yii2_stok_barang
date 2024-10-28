@@ -18,22 +18,18 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            
             'access' => [
-                'class' => AccessControl::class,
-                'only' => ['logout'],
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'], // Specify actions to restrict
                 'rules' => [
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'], // '@' means only authenticated users can access
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
+                    [
+                        'allow' => false,
+                        'roles' => ['?'], // '?' means guests (non-authenticated users)
+                    ],
                 ],
             ],
         ];
@@ -75,17 +71,18 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+    
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
-
-        $model->password = '';
+    
+        $model->password = ''; // Clear the password field for security reasons
         return $this->render('login', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Logout action.

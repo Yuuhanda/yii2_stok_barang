@@ -7,7 +7,8 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\db\Expression; 
+use Yii;
 /**
  * UserController implements the CRUD actions for User model.
  */
@@ -70,7 +71,27 @@ class UserController extends Controller
         $model = new User();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post())) {
+                $model->created_at = new Expression('NOW()');
+                $model->updated_at = new Expression('NOW()');
+                $model->status = 1;
+
+                // Hash the password before saving
+                if (!empty($model->password_hash)) {
+                    $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
+                }
+                // Get the user's IP address
+                $model->registration_ip = Yii::$app->request->userIP;
+
+                // Save the model
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    // Handle the error here (e.g., validation failure)
+                    Yii::error('Failed to save the model: ' . json_encode($model->errors));
+                    Yii::$app->session->setFlash('error', 'Failed to save the model' . json_encode($model->errors));
+                    return $this->redirect(['create']);
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {

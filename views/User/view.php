@@ -31,17 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'username',
-            'auth_key',
             'password_hash',
-            'confirmation_token',
             'status',
             'superadmin',
             'created_at',
             'updated_at',
             'registration_ip',
-            'bind_to_ip',
             'email:email',
-            'email_confirmed:email',
         ],
     ]) ?>
 

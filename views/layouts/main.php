@@ -47,7 +47,7 @@ echo Nav::widget([
                 ['label' => 'Master Inventory', 'url' => ['/item/index']],
                 ['label' => 'Manage Unit', 'url' => ['/unit/index']],
                 ['label' => 'Unit Usage Log', 'url' => ['/log/index']],
-            ],
+            ], 'visible' => !Yii::$app->user->isGuest,
         ],
         // Item Loaning Dropdown
         [
@@ -55,7 +55,7 @@ echo Nav::widget([
             'items' => [
                 ['label' => 'Unit Loaning', 'url' => ['/lending/index']],
                 ['label' => 'Loaning List', 'url' => ['/lending/list']],
-            ],
+            ], 'visible' => !Yii::$app->user->isGuest,
         ],
         // Unit Damaged & In-Repair Dropdown
         [
@@ -63,12 +63,12 @@ echo Nav::widget([
             'items' => [
                 ['label' => 'Damaged Unit', 'url' => ['/unit/damaged']],
                 ['label' => 'Unit In-Repair', 'url' => ['/unit/repair']],
-            ],
+            ], 'visible' => !Yii::$app->user->isGuest
         ],
         // Single Links
-        ['label' => 'Warehouse', 'url' => ['/warehouse/index']],
-        ['label' => 'Employee', 'url' => ['/employee/index']],
-        ['label' => 'Admin List', 'url' => ['/user/index']],
+        ['label' => 'Warehouse', 'url' => ['/warehouse/index'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Employee', 'url' => ['/employee/index'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Admin List', 'url' => ['/user/index'], 'visible' => !Yii::$app->user->isGuest],
         
         // User Login/Logout
         Yii::$app->user->isGuest
