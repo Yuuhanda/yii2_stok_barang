@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\models\LogSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Loaning List';
+$this->title = 'Unit Loaning';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="unit-loan-list">
