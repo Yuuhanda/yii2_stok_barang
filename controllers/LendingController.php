@@ -148,17 +148,20 @@ class LendingController extends Controller
     
         if ($this->request->isPost) {
             $model->date = date('Y-m-d');
-            $model->user_id = 1;
+            $user = Yii::$app->user->identity;
+            $model->user_id = $user->id;
             if ($model->load($this->request->post()) && $model->save()) {
                 // Update the item_unit status where id_unit matches the one in the Lending model
                 $itemUnit = ItemUnit::findOne($model->id_unit); // Assuming you have id_unit in the Lending model
                 if ($itemUnit !== null) {
+                    $user = Yii::$app->user->identity;
+                    $itemUnit->updated_by = $user->id;
                     $itemUnit->status = 2; // Update the status
                     $itemUnit->save(); // Save the changes
                 }
                 $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                 $logController->actionLendingLog($model->id_unit, $model->id_employee); // Call with correct parameters
-                return $this->redirect(['view', 'id_lending' => $model->id_lending]);
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();

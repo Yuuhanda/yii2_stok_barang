@@ -6,7 +6,14 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\ItemUnit $model */
 /** @var ActiveForm $form */
+$this->title = 'Send Unit To Repair';
+$this->params['breadcrumbs'][] = ['label' => 'Item Units', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="Send Unit To Repair'">
+<h1><?= Html::encode($this->title) ?></h1>
+
+<p>Serial Number: <?= $model->serial_number ?></p>
 <div class="send-repair">
 
     <?php $form = ActiveForm::begin(); ?>
