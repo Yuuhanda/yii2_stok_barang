@@ -16,6 +16,7 @@ use app\models\Lending;
 use yii\web\HttpException;
 use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -219,7 +220,8 @@ class UnitController extends Controller
                 } else {
                     $model->status = 1;
                 }
-                $user_id = 1;
+                $user = Yii::$app->user->identity;
+                $user_id = $user->id;
                 $model->updated_by = $user_id;
                 // Save the ItemUnit model after setting the status
                 if ($model->save(false)) {
@@ -364,6 +366,68 @@ class UnitController extends Controller
         ]);
     }
 
+    public function actionCorrectionSearch()
+    {
+        $model = new \app\models\ItemUnit();
+    
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->serial_number !== null) {
+                $serial_number = $model->serial_number;
+                // Call actionCorrectionUnit with the serial number
+                return $this->redirect(['correction-unit', 'serial_number' => $serial_number]);
+            } else {
+                // Handle the case when serial_number is not provided
+                Yii::$app->session->setFlash('error', 'Serial number cannot be null.');
+            }
+        }
+    
+        return $this->render('correction-search', [
+            'model' => $model,
+        ]);
+    }
+    
+    
+    public function actionCorrectionUnit($serial_number)
+    {
+        // Find the item unit by serial number (ensure that serial_number is a valid column)
+        $model = ItemUnit::find()->where(['serial_number' => $serial_number])->one();
+        
+        //Warehouse name lookup
+        $warehouses = Warehouse::find()->all();
+        $whList = \yii\helpers\ArrayHelper::map($warehouses, 'id_wh', 'wh_name');
+
+        // Condition lookup
+        $condition = \app\models\ConditionLookup::find()->all();
+        $condlist = \yii\helpers\ArrayHelper::map($condition, 'id_condition', 'condition_name');
+
+        //status lookup
+        $stats = \app\models\StatusLookup::find()->all();
+        $statslist = \yii\helpers\ArrayHelper::map($stats, 'id_status', 'status_name');
+
+        // Check if the model was found
+        if ($model === null) {
+            throw new \yii\web\NotFoundHttpException("Item with serial number $serial_number not found.");
+        }
+    
+        // If model is found, load and validate the form data
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+            $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
+            $logController->actionEditLog($serial_number);
+            Yii::$app->session->setFlash('success', 'Data saved successfully.');
+            return $this->refresh(); // Prevents form resubmission
+        }
+    
+        return $this->render('correction-unit', [
+            'model' => $model,
+            'whList' => $whList,
+            'condlist' => $condlist,
+            'statslist' => $statslist,//not showing status name
+        ]);
+    }
+    
+    
+
     public function actionSendRepair($id_unit)
     {
         $unit = \app\models\ItemUnit::findOne(['id_unit'=>$id_unit]);
@@ -371,18 +435,19 @@ class UnitController extends Controller
         if (!$unit) {
             throw new NotFoundHttpException('The requested ItemUnit does not exist.');
         }
+        $user = Yii::$app->user->identity;
         $model->id_unit = $id_unit;
         $model->status = 3;
         $model->id_item = $unit->id_item;
         $model->condition = $unit->condition;
         $model->id_wh = NULL;
-        $model->updated_by = 1;
+        $model->updated_by = $user->id;
         if ($model->load(Yii::$app->request->post())) {
 
             if ($model->validate()) {
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
-                    $logController->actionRepairLog($model->id_unit, $model->updated_by);
+                    $logController->actionRepairLog($model->id_unit);
                     return $this->redirect(['damaged']);
                 }
                 return;
@@ -408,17 +473,18 @@ class UnitController extends Controller
         if (!$unit) {
             throw new NotFoundHttpException('The requested ItemUnit does not exist.');
         }
+        $user = Yii::$app->user->identity;
         $model->id_unit = $id_unit;
         $model->status = 1;
         $model->id_item = $unit->id_item;
         $model->condition = $unit->condition;
         $model->id_wh = NULL;
-        $model->updated_by = 1;
+        $model->updated_by = $user->id;
         if ($model->load(Yii::$app->request->post())) {
             if ($model->validate()) {
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
-                    $logController->actionDoneRepairLog($model->id_unit, $model->updated_by);
+                    $logController->actionDoneRepairLog($model->id_unit);
                     return $this->redirect(['damaged']);
                 }
                 return;

@@ -119,10 +119,10 @@ class LogController extends Controller
             throw new \yii\web\NotFoundHttpException("Employee not found.");
         }
         $emp_name = $emp->emp_name;
-    
+        $user = Yii::$app->user->identity;
         // Set log fields
         $model->id_unit = $id_unit;
-        $model->content = "Unit $sn lent to $emp_name";
+        $model->content = "Unit $sn lent to $emp_name by $user->username";
         $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
     
         // Try saving and check for errors
@@ -212,10 +212,10 @@ class LogController extends Controller
             throw new \yii\web\NotFoundHttpException("Employee not found.");
         }
         $emp_name = $emp->emp_name;
-    
+        $user = Yii::$app->user->identity;
         // Set log fields
         $model->id_unit = $id_unit;
-        $model->content = "Unit $sn returned by $emp_name";
+        $model->content = "Unit $sn returned by $emp_name, recieved by $user->username";
         $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
     
         // Try saving and check for errors
@@ -228,7 +228,7 @@ class LogController extends Controller
         }
     }
 
-    public function actionRepairLog($id_unit, $user_id)
+    public function actionRepairLog($id_unit)
     {
         $model = new UnitLog();
         
@@ -238,17 +238,12 @@ class LogController extends Controller
             throw new \yii\web\NotFoundHttpException("Unit not found.");
         }
         $sn = $unit->serial_number;
-    
-        // Get the employee name
-        $emp = User::findOne($user_id);
-        if (!$emp) {
-            throw new \yii\web\NotFoundHttpException("Employee not found.");
-        }
-        $emp_name = $emp->username;
+          // Get data of the current logged-in user
+        $user = Yii::$app->user->identity;
     
         // Set log fields
         $model->id_unit = $id_unit;
-        $model->content = "Unit $sn sent for repair by $emp_name";
+        $model->content = "Unit $sn sent for repair by $user->username";
         $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
     
         // Try saving and check for errors
@@ -261,7 +256,7 @@ class LogController extends Controller
         }
     }
 
-    public function actionDoneRepairLog($id_unit, $user_id)
+    public function actionDoneRepairLog($id_unit)
     {
         $model = new UnitLog();
         
@@ -273,15 +268,11 @@ class LogController extends Controller
         $sn = $unit->serial_number;
     
         // Get the employee name
-        $emp = User::findOne($user_id);
-        if (!$emp) {
-            throw new \yii\web\NotFoundHttpException("Employee not found.");
-        }
-        $emp_name = $emp->username;
+        $user = Yii::$app->user->identity;
     
         // Set log fields
         $model->id_unit = $id_unit;
-        $model->content = "Unit $sn repaired. Taken to warehouse by $emp_name";
+        $model->content = "Unit $sn repaired. Taken to warehouse by $user->username";
         $model->update_at = new \yii\db\Expression('NOW()'); // Correct this field if necessary
     
         // Try saving and check for errors
@@ -293,4 +284,38 @@ class LogController extends Controller
             throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
         }
     }
+
+    public function actionEditLog($serial_number)
+    {
+        $model = new UnitLog();
+        
+        // Find the unit by serial number
+        $unit = ItemUnit::find()->where(['serial_number' => $serial_number])->one();
+        
+        if ($unit === null) {
+            throw new \yii\web\NotFoundHttpException("Unit with serial number $serial_number not found.");
+        }
+    
+        // Assign the unit ID to the log model
+        $model->id_unit = $unit->id_unit;
+    
+        // Get data of the current logged-in user
+        $user = Yii::$app->user->identity;
+        
+        // Create log content with the user's info
+        $model->content = "Unit $serial_number updated by " . $user->username; // Assuming 'username' is the relevant field
+    
+        // Set other necessary fields such as timestamp (if needed)
+        $model->update_at = new \yii\db\Expression('NOW()');
+    
+        // Validate and save the log model
+        if ($model->validate() && $model->save()) {
+            return true; // Save was successful
+        } else {
+            // Log save failed, output validation errors
+            Yii::error($model->getErrors(), __METHOD__);
+            throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
+        }
+    }
+       
 }

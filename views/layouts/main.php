@@ -66,6 +66,7 @@ echo Nav::widget([
             ], 'visible' => !Yii::$app->user->isGuest
         ],
         // Single Links
+        ['label' => 'Data Search & Correction', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Warehouse', 'url' => ['/warehouse/index'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Employee', 'url' => ['/employee/index'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Admin List', 'url' => ['/user/index'], 'visible' => !Yii::$app->user->isGuest],

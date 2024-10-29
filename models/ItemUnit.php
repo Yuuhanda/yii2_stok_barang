@@ -125,7 +125,7 @@ class ItemUnit extends \yii\db\ActiveRecord
                 'item_unit.serial_number AS serial_number',
                 'item_unit.id_unit AS id_unit',
                 'status_lookup.status_name AS status',
-                'user.username AS username',
+                'user.username AS updated_by',
 
                 // Show warehouse only when status is not 2
                 new \yii\db\Expression('CASE 

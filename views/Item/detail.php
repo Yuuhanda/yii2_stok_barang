@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'serial_number',
             'id_unit',
             'status',
-            'username',
+            'updated_by',
             'warehouse',
             'employee',
             'comment',
