@@ -33,7 +33,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php
 
 NavBar::begin([
-    'brandLabel' => 'Office Invetory Management App M2024 Mk2',
+    'brandLabel' => 'Office Invetory Management',
     'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top'],
 ]);
 
@@ -69,7 +69,12 @@ echo Nav::widget([
         ['label' => 'Data Search & Correction', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Warehouse', 'url' => ['/warehouse/index'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Employee', 'url' => ['/employee/index'], 'visible' => !Yii::$app->user->isGuest],
-        ['label' => 'Admin List', 'url' => ['/user/index'], 'visible' => !Yii::$app->user->isGuest],
+        [
+            'label' => 'Admin List',
+            'url' => ['/user/index'],
+            'visible' => Yii::$app->user->identity && Yii::$app->user->identity->superadmin == 1, // Show if user is superadmin
+        ],
+        
         
         // User Login/Logout
         Yii::$app->user->isGuest

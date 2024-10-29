@@ -35,7 +35,7 @@ class UserController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'roles' => ['@'], // allow authenticated users (logged in)
+                            'roles' => ['superadmin'], // allow authenticated users (logged in)
                         ],
                         [
                             'allow' => false,

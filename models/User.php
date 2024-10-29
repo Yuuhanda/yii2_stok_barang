@@ -56,6 +56,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->id;
     }
 
+    public function getIsSuperAdmin()
+    {
+        return $this->superadmin == 1; // Returns true if the user is a superadmin
+    }
+    
     /**
      * Gets query for [[AuthAssignments]].
      *
