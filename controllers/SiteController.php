@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
 
 class SiteController extends Controller
 {
@@ -74,6 +75,22 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Get the current logged-in user's ID
+            $userId = Yii::$app->user->identity->id;
+
+            // Fetch the user data from the user table
+            $user = User::findOne($userId);
+
+             // Check if the user is a superadmin (assuming 1 means superadmin)
+            if ($user && $user->superadmin == 1) {
+                $auth = Yii::$app->authManager;
+            
+                // Check if the user already has the 'superadmin' role
+                if (!$auth->getAssignment('superadmin', $userId)) {
+                    $superadminRole = $auth->getRole('superadmin');
+                    $auth->assign($superadminRole, $userId);
+                }
+            }
             return $this->redirect(['item/index']);
         }
 

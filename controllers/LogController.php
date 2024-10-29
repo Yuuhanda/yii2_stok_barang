@@ -9,10 +9,12 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\ItemUnit;
+use app\models\UnitSearch;
 use app\models\User;
 use DateTime;
 use Yii;
 use yii\filters\AccessControl;
+use yii\data\ArrayDataProvider;
 
 /**
  * LogController implements the CRUD actions for UnitLog model.
@@ -58,9 +60,19 @@ class LogController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new LogSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
+        $searchModel = new UnitSearch();
+        $logdata = new UnitLog();
+        $logArray = $logdata->getLogAll();
+        // Wrap the array in an ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $logArray,
+            'pagination' => [
+                'pageSize' => 10, // Adjust as needed
+            ],
+            'sort' => [
+                'attributes' => ['serial_number', 'content', 'log_date'],
+            ],
+        ]);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -317,5 +329,39 @@ class LogController extends Controller
             throw new \yii\web\ServerErrorHttpException("Failed to save log: " . json_encode($model->getErrors()));
         }
     }
-       
+
+    public function actionSearchLog()
+    {
+        $model = new \app\models\ItemUnit();
+    
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->serial_number !== null) {
+                return $this->redirect(['search-result', 'serial_number' => $model->serial_number]);
+            } else{
+                Yii::$app->session->setFlash('error', 'Serial number cannot be null.');
+            }
+        }
+    
+        return $this->render('search-log', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionSearchResult($serial_number){
+        $logdata = new UnitLog();
+        $logArray = $logdata->getLogSingle($serial_number);
+        // Wrap the array in an ArrayDataProvider
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $logArray,
+            'pagination' => [
+                'pageSize' => 10, // Adjust as needed
+            ],
+            'sort' => [
+                'attributes' => ['serial_number', 'content', 'log_date'],
+            ],
+        ]);
+        return $this->render('log-single', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 }

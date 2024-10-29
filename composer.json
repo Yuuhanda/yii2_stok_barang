@@ -20,7 +20,8 @@
         "webvimark/module-user-management": "^1.0",
         "yiisoft/yii2-bootstrap5": "^2.0",
         "yiisoft/yii2-jui": "^2.0",
-        "bower-asset/datatables": "^1.10"
+        "bower-asset/datatables": "^1.10",
+        "phpoffice/phpspreadsheet": "^3.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

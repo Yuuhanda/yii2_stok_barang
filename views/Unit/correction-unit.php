@@ -12,8 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="correction-unit">
 <h1><?= Html::encode($this->title) ?></h1>
-<h1>Correction Unit</h1>
-
 <p>Serial Number: <?= $model->serial_number ?></p>
     <?php $form = ActiveForm::begin(); ?>
 
