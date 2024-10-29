@@ -18,15 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Search By Serial Number', ['search-log'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Export Log to .xlsx', ['export/export-log'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Export Log to .xlsx', ['export/export-log-single', 'serial_number' =>Yii::$app->request->get('serial_number')], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

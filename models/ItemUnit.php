@@ -168,16 +168,16 @@ class ItemUnit extends \yii\db\ActiveRecord
     public function getWhDistribution($id_item){
         $query = (new Query())
             ->select([
-                'warehouse'=>'warehouse.wh_name',
-                'available' => 'COUNT(CASE WHEN TRIM(status) = "1" THEN 1 END)',
-                'in_use' => 'COUNT(CASE WHEN TRIM(status) = "2" THEN 1 END)',
-                'in_repair' => 'COUNT(CASE WHEN TRIM(status) = "3" THEN 1 END)',
-                'lost' => 'COUNT(CASE WHEN TRIM(status) = "4" THEN 1 END)',
+                'warehouse' => 'COALESCE(warehouse.wh_name, "In-Repair")', 
+                'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" THEN 1 END)',
+                'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
+                'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
+                'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
             ])
             ->from('item_unit')
             ->leftJoin('warehouse', 'warehouse.id_wh=item_unit.id_wh')
-            ->where("item_unit.id_item=$id_item")
-            ->groupBy('warehouse'); // Group by warehouse id
+            ->where(['item_unit.id_item'=>$id_item])
+            ->groupBy('warehouse.id_wh'); // Group by warehouse id
 
         $command = $query->createCommand();
         $results = $command->queryAll();

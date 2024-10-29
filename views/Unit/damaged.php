@@ -16,7 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="unit-log-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?=  Html::a('Export Damaged Unit Data to XLSX', ['export/export-damaged'], [
+    'class' => 'btn btn-success',
+    'target' => '_blank',  // Opens in a new tab, optional
+    'data-method' => 'post',  // Send as POST request, optional for security reasons
+    ]);?>
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

@@ -20,7 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?=  Html::a('Export Lending Data to XLSX', ['export/export-lending'], [
+    'class' => 'btn btn-success',
+    'target' => '_blank',  // Opens in a new tab, optional
+    'data-method' => 'post',  // Send as POST request, optional for security reasons
+    ]);?>
     <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
