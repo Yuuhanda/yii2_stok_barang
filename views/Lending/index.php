@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'item_name',
             'SKU',
-            'available_unit',
+            'available',
             // Custom action buttons
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -36,8 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => 'Action', 
                 'buttons' => [
                     'loanunit' => function ($url, $model, $key) {
-                        // Create the "See Detail In Warehouse" button
-                        return Html::a('Loan A Unit', ['lending/loan-unit', 'id_item' => $model['id_item']], ['class' => 'btn btn-primary']);
+                        // Check if 'available' is greater than 0
+                        if ($model['available'] > 0) {
+                            // Create the "Loan A Unit" button
+                            return Html::a('Loan A Unit', ['lending/loan-unit', 'id_item' => $model['id_item']], ['class' => 'btn btn-primary']);
+                        }
+                        // Return nothing if 'available' is 0 or less
+                        return '';
                     },
                 ],
             ],
