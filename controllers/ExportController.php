@@ -8,6 +8,9 @@ use app\models\Item;
 use app\models\ItemUnit;
 use app\models\Lending;
 use app\models\UnitLog;
+use Yii;
+use app\models\ItemSearch;
+use app\models\Warehouse;
 
 class ExportController extends \yii\web\Controller
 {
@@ -191,7 +194,7 @@ class ExportController extends \yii\web\Controller
         }
 
         // Set filename and export
-        $filename = 'exported_unit_inrepair_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $filename = 'exported_log_all_data_' . date('Y-m-d_H-i-s') . '.xlsx';
         $writer = new Xlsx($spreadsheet);
 
         // Send file as response for download
@@ -225,7 +228,167 @@ class ExportController extends \yii\web\Controller
         }
 
         // Set filename and export
-        $filename = 'exported_unit_inrepair_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $filename = 'exported_log'.$serial_number.'_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        // Send file as response for download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
+        exit();
+    }
+
+    public function actionExportMain(){
+        $itemmodel = new Item();
+        $items = $itemmodel->getDashboard(); 
+
+        // Create new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->setCellValue('A1', 'item_name');
+        $sheet->setCellValue('B1', 'SKU');
+        $sheet->setCellValue('C1', 'available');
+        $sheet->setCellValue('D1', 'in_use');
+        $sheet->setCellValue('E1', 'in_repair');
+        $sheet->setCellValue('F1', 'lost');
+
+        // Populate data
+        $row = 2;  // Row starts after the headers
+        foreach ($items as $item) {
+            $sheet->setCellValue('A' . $row, $item['item_name']);  // Access array keys instead of object properties
+            $sheet->setCellValue('B' . $row, $item['SKU']);
+            $sheet->setCellValue('C' . $row, $item['available']);
+            $sheet->setCellValue('D' . $row, $item['in_use']);
+            $sheet->setCellValue('E' . $row, $item['in_repair']);
+            $sheet->setCellValue('F' . $row, $item['lost']);
+            $row++;
+        }
+
+        // Set filename and export
+        $filename = 'exported_master_inventory_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        // Send file as response for download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
+        exit();
+    }
+
+    public function actionItemDetail($id_item){
+        $itemmodel = new ItemUnit();
+        $items = $itemmodel->getItemDetail($id_item); 
+
+        // Create new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->setCellValue('A1', 'condition');
+        $sheet->setCellValue('B1', 'serial_number');
+        $sheet->setCellValue('C1', 'id_unit');
+        $sheet->setCellValue('D1', 'status');
+        $sheet->setCellValue('E1', 'updated_by');
+        $sheet->setCellValue('F1', 'warehouse');
+        $sheet->setCellValue('G1', 'employee');
+        $sheet->setCellValue('H1', 'comment');
+
+        // Populate data
+        $row = 2;  // Row starts after the headers
+        foreach ($items as $item) {
+            $sheet->setCellValue('A' . $row, $item['condition']);  // Access array keys instead of object properties
+            $sheet->setCellValue('B' . $row, $item['serial_number']);
+            $sheet->setCellValue('C' . $row, $item['id_unit']);
+            $sheet->setCellValue('D' . $row, $item['status']);
+            $sheet->setCellValue('E' . $row, $item['updated_by']);
+            $sheet->setCellValue('F' . $row, $item['warehouse']);
+            $sheet->setCellValue('G' . $row, $item['employee']);
+            $sheet->setCellValue('H' . $row, $item['comment']);
+            $row++;
+        }
+
+        // Set filename and export
+        $filename = 'exported_master_inventory_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        // Send file as response for download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
+        exit();
+    }
+
+
+    public function actionWarehouse($id_wh){
+        $model = new Warehouse();
+        $items = $model->getExport($id_wh);
+
+        // Create new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->setCellValue('A1', 'item_name');
+        $sheet->setCellValue('B1', 'SKU');
+        $sheet->setCellValue('C1', 'available');
+        $sheet->setCellValue('D1', 'in_use');
+        $sheet->setCellValue('E1', 'in_repair');
+        $sheet->setCellValue('F1', 'lost');
+
+        // Populate data
+        $row = 2;  // Row starts after the headers
+        foreach ($items as $item) {
+            $sheet->setCellValue('A' . $row, $item['item_name']);  // Access array keys instead of object properties
+            $sheet->setCellValue('B' . $row, $item['SKU']);
+            $sheet->setCellValue('C' . $row, $item['available']);
+            $sheet->setCellValue('D' . $row, $item['in_use']);
+            $sheet->setCellValue('E' . $row, $item['in_repair']);
+            $sheet->setCellValue('F' . $row, $item['lost']);
+            $row++;
+        }
+
+        // Set filename and export
+        $filename = 'exported_warehouse_data_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        // Send file as response for download
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
+        exit();
+    }
+    
+    //item detail in warehouse export
+    public function actionWhDist($id_item){
+        $model = new ItemUnit();
+        $items = $model->getWhDistribution($id_item);
+
+        // Create new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->setCellValue('A1', 'warehouse');
+        $sheet->setCellValue('B1', 'available');
+        $sheet->setCellValue('C1', 'in_use');
+        $sheet->setCellValue('D1', 'in_repair');
+        $sheet->setCellValue('E1', 'lost');
+
+        // Populate data
+        $row = 2;  // Row starts after the headers
+        foreach ($items as $item) {
+            $sheet->setCellValue('A' . $row, $item['warehouse']);  // Access array keys instead of object properties
+            $sheet->setCellValue('B' . $row, $item['available']);
+            $sheet->setCellValue('C' . $row, $item['in_use']);
+            $sheet->setCellValue('D' . $row, $item['in_repair']);
+            $sheet->setCellValue('E' . $row, $item['lost']);
+            $row++;
+        }
+
+        // Set filename and export
+        $filename = 'exported_item_in_warehouses_data_' . date('Y-m-d_H-i-s') . '.xlsx';
         $writer = new Xlsx($spreadsheet);
 
         // Send file as response for download

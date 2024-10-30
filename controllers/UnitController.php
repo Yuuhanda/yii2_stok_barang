@@ -18,6 +18,7 @@ use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use app\models\DamagedSearch;
+use yii\web\UploadForm;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -393,7 +394,8 @@ class UnitController extends Controller
 
         // Check if the model was found
         if ($model === null) {
-            throw new \yii\web\NotFoundHttpException("Item with serial number $serial_number not found.");
+            Yii::$app->session->setFlash('error', 'Serial number cannot be found. Check if you mistyped it.');
+            return $this->redirect(['correction-search']);
         }
     
         // If model is found, load and validate the form data
@@ -484,4 +486,23 @@ class UnitController extends Controller
             'whList' => $whList,
         ]);
     }
+
+//    public function actionMassUnit()
+//{
+//    $model = new UploadForm();
+//
+//    if (Yii::$app->request->isPost) {
+//        $model->file = UploadedFile::getInstance($model, 'file');
+//
+//        if ($model->upload()) {
+//            // Process the uploaded .xlsx file
+//            // Redirect or show a success message after processing
+//            return $this->redirect(['success-page']);
+//        }
+//    }
+//
+//    return $this->render('mass-unit', ['model' => $model]);
+//}
+
+    
 }

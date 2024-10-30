@@ -10,17 +10,14 @@ use yii\grid\GridView;
 /** @var app\models\ItemSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Item Detail';
+$this->title = "Item In Warehouse $warehouse_name";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="item-detail">
+<div class="Master-Inventory-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-    <?= Html::a('Export to .xlsx', ['export/item-detail', 'id_item' =>Yii::$app->request->get('id_item')], ['class' => 'btn btn-success']) ?>
-    </p>
-
+    
+    <p><?= Html::a('Export Data to .xlsx', ['export/warehouse' ,'id_wh' =>Yii::$app->request->get('id_wh')], ['class' => 'btn btn-info']) ?></p>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -29,15 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             
-            'condition',
-            'serial_number',
-            'id_unit',
-            'status',
-            'updated_by',
-            'warehouse',
-            'employee',
-            'comment',
+            'item_name',
+            'SKU',
+            'available',
+            'in_use',
+            'in_repair',
+            'lost',
             
+
         ],
     ]); ?>
 
