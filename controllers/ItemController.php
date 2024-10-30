@@ -102,17 +102,10 @@ class ItemController extends Controller
     }
 
     public function actionWarehouse($id_item){
-        $itemModel = new ItemUnit;
         $searchModel = new WarehouseSearch();
-        $dataProvider = $itemModel->getWhDistribution($id_item);
+        $dataProvider = $searchModel->searchWhDist(Yii::$app->request->queryParams, $id_item);
 
-       // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+
 
         return $this->render('whdist', [
             'searchModel' => $searchModel,

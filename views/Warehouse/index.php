@@ -33,10 +33,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'wh_name',
             'wh_address',
             [
-                'class' => ActionColumn::className(),
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {delete} {item-in-warehouse}', // Add custom button here
+                'buttons' => [
+                    'item-in-warehouse' => function ($url, $model, $key) {
+                        return Html::a(
+                            'Item In Warehouse',
+                            ['warehouse/item', 'id_wh' => $model->id_wh], // Redirect to the warehouse/item action
+                            ['class' => 'btn btn-info btn-sm'] // Optional: CSS classes for styling
+                        );
+                    },
+                ],
                 'urlCreator' => function ($action, Warehouse $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id_wh' => $model->id_wh]);
-                 }
+                },
             ],
         ],
     ]); ?>

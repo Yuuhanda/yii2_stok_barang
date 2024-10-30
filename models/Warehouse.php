@@ -66,4 +66,36 @@ class Warehouse extends \yii\db\ActiveRecord
     $results = $command->queryAll();  // Fetch all rows
     return $results;
     }
+
+    public function getWhName($id_wh){
+        $query = (new Query())
+        ->select('wh_name')
+        ->from('warehouse')
+        ->where(['id_wh'=>$id_wh]);
+
+        $command = $query->createCommand();
+        $results = $command->queryAll();
+        return $results;
+    }
+
+    public function getExport($id_wh){
+        $query = (new Query())
+        ->select([
+            'item_name' => 'item.item_name',
+            'SKU' => 'item.SKU',
+            'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END)',
+            'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
+            'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
+            'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
+            'id_item' => 'item.id_item',
+        ])
+        ->from('item')
+        ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
+        ->where(['item_unit.id_wh'=>$id_wh])
+        ->groupBy('item.id_item');
+        $command = $query->createCommand();
+        $results = $command->queryAll();
+        return $results;
+
+    }
 }
