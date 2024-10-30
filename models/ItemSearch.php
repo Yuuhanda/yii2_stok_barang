@@ -1,70 +1,83 @@
 <?php
-
 namespace app\models;
 
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use app\models\Item;
-use yii\db\ActiveQuery;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
 
-/**
- * ItemSearch represents the model behind the search form of `app\models\Item`.
- */
-class ItemSearch extends Item
+class ItemSearch extends Model
 {
+    public $item_name;
+    public $SKU;
+    public $available;
+    public $in_use;
+    public $in_repair;
+    public $lost;
+    public $id_item;
+
     /**
-     * {@inheritdoc}
+     * Rules for validation (optional, add any specific rules if necessary)
      */
     public function rules()
     {
         return [
-            [['id_item'], 'integer'],
             [['item_name', 'SKU'], 'safe'],
+            [['available', 'in_use', 'in_repair', 'lost', 'id_item'], 'integer'],
         ];
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
+     * Search function to apply filters and return data provider for the dashboard
      */
     public function search($params)
     {
-        $query = Item::find();
+        // Your custom query for the dashboard
+        $query = (new Query())
+            ->select([
+                'item_name' => 'item.item_name',
+                'SKU' => 'item.SKU',
+                'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END)',
+                'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
+                'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
+                'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
+                'id_item' => 'item.id_item',
+            ])
+            ->from('item')
+            ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
+            ->groupBy('item.id_item');
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
+        // Load the search parameters
         $this->load($params);
 
+        // Apply filtering conditions
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
+            // Return all records if validation fails
+            $query->where('0=1');
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id_item' => $this->id_item,
+        // Add conditions based on filters (optional)
+        $query->andFilterWhere(['like', 'item.item_name', $this->item_name])
+              ->andFilterWhere(['like', 'item.SKU', $this->SKU]);
+
+        // Execute the query and return an ArrayDataProvider
+        $command = $query->createCommand();
+        $results = $command->queryAll();
+
+        return new ArrayDataProvider([
+            'allModels' => $results,
+            'pagination' => [
+                'pageSize' => 20, // Adjust as needed
+            ],
+            'sort' => [
+                'attributes' => [
+                    'item_name',
+                    'SKU',
+                    'available',
+                    'in_use',
+                    'in_repair',
+                    'lost',
+                ],
+            ],
         ]);
-
-        $query->andFilterWhere(['like', 'item_name', $this->item_name])
-            ->andFilterWhere(['like', 'SKU', $this->SKU]);
-
-        return $dataProvider;
     }
 }

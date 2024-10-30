@@ -106,18 +106,11 @@ class LendingController extends Controller
 
     public function actionList()
     {
-        $searchModel = new UnitSearch();
-        $lendingModel = new Lending();
-        $lendingList = $lendingModel->getLendingList();
-    
-        // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $lendingList,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-    
+        // Create the search model and load the request data
+        $searchModel = new LendingSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        // Render the view with the search model and data provider
         return $this->render('lending-list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
