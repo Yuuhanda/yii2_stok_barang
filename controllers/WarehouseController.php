@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\ItemUnit;
 use Yii;
+use app\models\ItemSearch;
 /**
  * WarehouseController implements the CRUD actions for Warehouse model.
  */
@@ -171,5 +172,18 @@ class WarehouseController extends Controller
         return ItemUnit::find()->where(['id_wh' => $id_wh])->exists();
     }
     
+    public function actionItem($id_wh){
+        // Create the search model and load the request data
+        $searchModel = new ItemSearch();
+        $dataProvider = $searchModel->searchWarehouse(Yii::$app->request->queryParams, $id_wh);
+        $model = $this->findModel($id_wh);
+        $wh_name = $model->wh_name;
+        // Render the view with the search model and data provider
+        return $this->render('item', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'warehouse_name' => $wh_name,
+        ]);
+    }
 
 }

@@ -22,7 +22,8 @@
         "yiisoft/yii2-jui": "^2.0",
         "bower-asset/datatables": "^1.10",
         "phpoffice/phpspreadsheet": "^3.3",
-        "almasaeed2010/adminlte": "~3.2"
+        "almasaeed2010/adminlte": "~3.2",
+        "kartik-v/yii2-widget-select2": "^2.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
