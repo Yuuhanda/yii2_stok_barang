@@ -16,6 +16,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\data\ArrayDataProvider;
 
+
 /**
  * LogController implements the CRUD actions for UnitLog model.
  */
@@ -60,19 +61,10 @@ class LogController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UnitSearch();
-        $logdata = new UnitLog();
-        $logArray = $logdata->getLogAll();
-        // Wrap the array in an ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $logArray,
-            'pagination' => [
-                'pageSize' => 10, // Adjust as needed
-            ],
-            'sort' => [
-                'attributes' => ['serial_number', 'content', 'log_date'],
-            ],
-        ]);
+        $searchModel = new LogSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        // Render the view with the search model and data provider
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -58,37 +58,43 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $itemModel = new Item;
+        // Create the search model and load the request data
         $searchModel = new ItemSearch();
-        $dataProvider = $itemModel->getDashboard();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-       // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 100,
-            ],
-        ]);
-
+        // Render the view with the search model and data provider
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionDetails($id_item){
-        $itemModel = new ItemUnit;
+    public function actionDetails($id_item)
+    {
+        // Create the search model and load the request data
         $searchModel = new UnitSearch();
-        $dataProvider = $itemModel->getItemDetail($id_item);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id_item); // Raw data results
 
-       // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+        // Wrap the raw results with ArrayDataProvider to enable pagination
+        //$dataProvider = new ArrayDataProvider([
+        //    'allModels' => $dataProvider, // Pass the raw data here
+        //    'pagination' => [
+        //        'pageSize' => 10, // Adjust the page size as needed
+        //    ],
+        //    'sort' => [
+        //        'attributes' => [
+        //            'serial_number',
+        //            'condition',
+        //            'status',
+        //            'updated_by',
+        //            'warehouse',
+        //            'employee',
+        //            'comment',
+        //        ],
+        //    ],
+        //]);
 
+        // Render the view with the search model and data provider
         return $this->render('detail', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -17,6 +17,7 @@ use yii\web\HttpException;
 use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use app\models\DamagedSearch;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -62,17 +63,10 @@ class UnitController extends Controller
      */
     public function actionIndex()
     {
-        $itemModel = new Item;
         $searchModel = new ItemSearch();
-        $dataProvider = $itemModel->getDashboard();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-       // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -113,43 +107,36 @@ class UnitController extends Controller
        ]);
    }
 
-    public function actionDamaged(){
-        $unitModel = new ItemUnit();
-        $searchModel = new UnitSearch();
-        $damagedlist = $unitModel->getBrokenUnit();
-    
-        // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $damagedlist,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-    
-        return $this->render('damaged', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+   public function actionDamaged()
+   {
+       $unitModel = new ItemUnit();
+       $damagedlist = $unitModel->getBrokenUnit();
+   
+       // Initialize search model
+       $searchModel = new DamagedSearch();
+   
+       // Filter the data based on search input
+       $dataProvider = $searchModel->search(\Yii::$app->request->queryParams, $damagedlist);
+   
+       return $this->render('damaged', [
+           'searchModel' => $searchModel,
+           'dataProvider' => $dataProvider,
+       ]);
+   }
+   
 
-    public function actionRepair(){
-        $unitModel = new ItemUnit();
-        $searchModel = new UnitSearch();
-        $damagedlist = $unitModel->getUnitRepair();
-    
-        // Wrap the array result in ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $damagedlist,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+   public function actionRepair(){
+        $searchModel = new DamagedSearch();
+        
+        // Load the query parameters and filter accordingly
+        $dataProvider = $searchModel->searchRepair(Yii::$app->request->queryParams);
     
         return $this->render('repair', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
 
     public function actionAddUnit($id_item)
     {
