@@ -30,7 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'serial_number',
             'content',
-            'log_date',            
+            [
+                'attribute' => 'log_date',
+                'format' => ['date', 'php:Y-m-d H:i:s'],
+            ],          
         ],
     ]); ?>
 
