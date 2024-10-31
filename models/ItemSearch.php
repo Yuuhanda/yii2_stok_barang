@@ -14,6 +14,7 @@ class ItemSearch extends Model
     public $in_repair;
     public $lost;
     public $id_item;
+    public $imagefile;
 
     /**
      * Rules for validation (optional, add any specific rules if necessary)
@@ -21,7 +22,7 @@ class ItemSearch extends Model
     public function rules()
     {
         return [
-            [['item_name', 'SKU'], 'safe'],
+            [['item_name', 'SKU', 'imagefile'], 'safe'],
             [['available', 'in_use', 'in_repair', 'lost', 'id_item'], 'integer'],
         ];
     }
@@ -41,6 +42,7 @@ class ItemSearch extends Model
                 'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
                 'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
                 'id_item' => 'item.id_item',
+                'imagefile' =>'item.imagefile',
             ])
             ->from('item')
             ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
@@ -76,6 +78,7 @@ class ItemSearch extends Model
                     'in_use',
                     'in_repair',
                     'lost',
+                    'imagefile'
                 ],
             ],
         ]);
@@ -93,6 +96,7 @@ class ItemSearch extends Model
                 'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
                 'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
                 'id_item' => 'item.id_item',
+                'imagefile' =>'item.imagefile',
             ])
             ->from('item')
             ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
@@ -129,6 +133,7 @@ class ItemSearch extends Model
                     'in_use',
                     'in_repair',
                     'lost',
+                    'imagefile',
                 ],
             ],
         ]);
