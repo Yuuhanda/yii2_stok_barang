@@ -499,7 +499,7 @@ class UnitController extends Controller
         ]);
     }
 
-    public function actionMassUnit($id_item)
+    public function actionBulkAdd($id_item)
     {
         $model = new UploadForm();
     
@@ -539,4 +539,7 @@ class UnitController extends Controller
         return $this->render('mass-unit', ['model' => $model]);
     }
     
+    //public function actionBulkReturn(){
+//
+    //}
 }

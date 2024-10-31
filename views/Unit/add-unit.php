@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="add-unit">
 <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Add Unit in Bulk', ['unit/mass-unit', 'id_item' =>Yii::$app->request->get('id_item')], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Unit in Bulk', ['unit/Bulk-Add', 'id_item' =>Yii::$app->request->get('id_item')], ['class' => 'btn btn-success']) ?>
     </p>
     <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model, 'id_item')->hiddenInput()->label(false) ?>
