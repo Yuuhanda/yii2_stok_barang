@@ -168,13 +168,10 @@ class UnitController extends Controller
                     }
                     if ($item !== null && !empty($item->SKU)) {
                         // Get the first 3 characters of the SKU
-                        $skuPrefix = substr($item->SKU, 0, 3);
-                        
-                        // Generate a 4-digit random number
-                        $randomNumber = str_pad(mt_rand(100, 9999), 4, '0', STR_PAD_LEFT);
+                        $skuPrefix = substr($item->SKU, 0, 4);
                         
                         // Combine the SKU prefix and the random number to create the serial number
-                        $model->serial_number = $skuPrefix .'-'. $randomNumber;
+                        $model->serial_number = $row['B'] ?? $this->generateUniqueSerialNumber($skuPrefix);
                     } else {
                         throw new \yii\web\NotFoundHttpException("Item not found or SKU is empty.");
                     }
@@ -512,7 +509,7 @@ class UnitController extends Controller
                 $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
     
                 $item = Item::findOne($id_item);
-                $skuPrefix = substr($item->SKU, 0, 3); // Assuming SKU is a property of Item
+                $skuPrefix = substr($item->SKU, 0, 4); // Assuming SKU is a property of Item
     
                 foreach ($sheetData as $rowIndex => $row) {
                     // Skip the header row
@@ -523,7 +520,8 @@ class UnitController extends Controller
                     $unit->status = 1; // New unit status
                     $unit->id_wh = $row['A'] ?? null;
                     $unit->condition = 1;
-                    $unit->serial_number = $row['B'] ?? $skuPrefix . '-' . random_int(10, 1000);
+                    // Generate a unique serial number
+                    $unit->serial_number = $row['B'] ?? $this->generateUniqueSerialNumber($skuPrefix);
                     $unit->comment = $row['C'] ?? 'New Unit';
                     $unit->updated_by = Yii::$app->user->id; // Assuming user is logged in
     
@@ -539,6 +537,17 @@ class UnitController extends Controller
         return $this->render('mass-unit', ['model' => $model]);
     }
     
+
+    protected function generateUniqueSerialNumber($skuPrefix)
+    {
+        do {
+            $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $randomStr2 = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $serialNumber = $skuPrefix . '-' . random_int(0, 9). random_int(0, 9). random_int(0, 9). random_int(0, 9). $randomStr.'-'.$randomStr2;
+        } while (ItemUnit::find()->where(['serial_number' => $serialNumber])->exists());
+
+        return $serialNumber;
+    }
     //public function actionBulkReturn(){
 //
     //}
