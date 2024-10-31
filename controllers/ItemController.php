@@ -142,9 +142,9 @@ class ItemController extends Controller
                 
                 // Check if SKU is empty
                 if (empty($model->SKU)) {
-                    $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 4));
+                    
                     // Generate random string
-                    $model->SKU = $randomStr . "-" . rand(1, 100); // Create SKU with random string
+                    $model->SKU = $this->generateSKU(); // Create SKU with random string
                 }
                 //$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                 //if (!$model->imageFile || !$model->imageFile->tempName) {
@@ -167,7 +167,16 @@ class ItemController extends Controller
         ]);
     }
 
-    
+    protected function generateSKU(){
+        do {
+            $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $randomStr2 = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $autosku = $randomStr . random_int(0, 9) . random_int(0, 9) .'-' .  random_int(0, 9) . random_int(0, 9). $randomStr2;
+        } while (Item::find()->where(['SKU' => $autosku])->exists());
+
+        return $autosku;
+    }
+
 
     /**
      * Updates an existing Item model.
