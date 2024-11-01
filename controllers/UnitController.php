@@ -179,7 +179,8 @@ class UnitController extends Controller
                 $user = Yii::$app->user->identity;
                 $model->updated_by = $user->id;
             if ($model->save()){
-            return $this->redirect(['index']);
+                Yii::$app->session->setFlash('success', 'Unit Added successfully.');
+                return $this->redirect(['index']);
             }
             }
         }
@@ -235,6 +236,7 @@ class UnitController extends Controller
                     }
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                     $logController->actionReturnLog($model->id_unit, $lending->id_employee);
+                    Yii::$app->session->setFlash('success', 'Unit Returned successfully.');
                     return $this->redirect(['lending/list']);
                 }
             }
@@ -261,6 +263,7 @@ class UnitController extends Controller
         $model = $this->findModel($id_unit);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Unit Updated successfully.');
             return $this->redirect(['view', 'id_unit' => $model->id_unit]);
         }
 
@@ -412,7 +415,7 @@ class UnitController extends Controller
             $model->save();
             $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
             $logController->actionEditLog($serial_number);
-            Yii::$app->session->setFlash('success', 'Data saved successfully.');
+            Yii::$app->session->setFlash('success', 'Unit saved successfully.');
             return $this->refresh(); // Prevents form resubmission
         }
     

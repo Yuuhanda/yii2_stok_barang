@@ -87,7 +87,8 @@ class EmployeeController extends Controller
         $model = new Employee();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post()) && $model->save()) 
+            Yii::$app->session->setFlash('success', 'Employee added successfully.');{
                 return $this->redirect(['view', 'id_employee' => $model->id_employee]);
             }
         } else {
@@ -111,6 +112,7 @@ class EmployeeController extends Controller
         $model = $this->findModel($id_employee);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Employee updated successfully.');
             return $this->redirect(['view', 'id_employee' => $model->id_employee]);
         }
 

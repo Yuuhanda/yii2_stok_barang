@@ -33,7 +33,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php
 
 NavBar::begin([
-    'brandLabel' => 'Office Invetory Management',
+    'brandLabel' => 'Office Invetory',
     'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top'],
 ]);
 
@@ -66,7 +66,7 @@ echo Nav::widget([
             ], 'visible' => !Yii::$app->user->isGuest
         ],
         // Single Links
-        ['label' => 'Data Search & Correction', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Search & Edit Unit Data', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Warehouse', 'url' => ['/warehouse/index'], 'visible' => !Yii::$app->user->isGuest],
         ['label' => 'Employee', 'url' => ['/employee/index'], 'visible' => !Yii::$app->user->isGuest],
         [
@@ -108,8 +108,8 @@ NavBar::end();
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
         <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+            <div class="col-md-6 text-center text-md-start">&copy;Fikri A. Yuhanda - Prabubima Tech 2024 || Office Inventory Management Yii2 <?= date('Y') ?></div>
+            <!--<div class="col-md-6 text-center text-md-end"><?php //echo Yii::powered() ?></div> -->
         </div>
     </div>
 </footer>

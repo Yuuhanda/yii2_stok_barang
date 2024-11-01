@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'condition')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'status')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'id_wh')->hiddenInput()->label(false) ?>
-        <?= $form->field($model, 'comment') ?>
+        <?= $form->field($model, 'comment')->label('Comment should be information about repair') ?>
     
         <div class="form-group">
             <?= Html::submitButton('Send Unit To Repair', ['class' => 'btn btn-primary']) ?>

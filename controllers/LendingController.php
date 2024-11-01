@@ -146,6 +146,7 @@ class LendingController extends Controller
                 }
                 $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                 $logController->actionLendingLog($model->id_unit, $model->id_employee); // Call with correct parameters
+                Yii::$app->session->setFlash('success', 'Unit'. $itemUnit->serial_number .'loaned.');
                 return $this->redirect(['index']);
             }
         } else {
