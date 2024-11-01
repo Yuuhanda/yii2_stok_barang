@@ -89,7 +89,8 @@ class WarehouseController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id_wh' => $model->id_wh]);
+                Yii::$app->session->setFlash('success', 'Warehouse added.');
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
@@ -112,7 +113,8 @@ class WarehouseController extends Controller
         $model = $this->findModel($id_wh);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id_wh' => $model->id_wh]);
+            Yii::$app->session->setFlash('success', 'Warehouse updated.');
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

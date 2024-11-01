@@ -449,6 +449,7 @@ class UnitController extends Controller
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                     $logController->actionRepairLog($model->id_unit);
+                    Yii::$app->session->setFlash('success', 'Unit sent to repair successfully.');
                     return $this->redirect(['damaged']);
                 }
                 return;
@@ -486,7 +487,8 @@ class UnitController extends Controller
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                     $logController->actionDoneRepairLog($model->id_unit);
-                    return $this->redirect(['damaged']);
+                    Yii::$app->session->setFlash('success', 'Unit repaired and updated.');
+                    return $this->redirect(['repair']);
                 }
                 return;
             }
