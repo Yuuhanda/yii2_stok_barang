@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Item $model */
+/** @var app\models\UploadPicture $uploadModel */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -16,7 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'SKU')->textInput(['maxlength' => true]) ?>
 
-     <!-- <?//= $form->field($model, 'imageFile')->fileInput() ?> File input for image upload -->
+    <!-- Image Upload Field -->
+    <?= $form->field($uploadModel, 'imageFile')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -14,6 +14,7 @@ use app\models\UnitSearch;
 use app\models\WarehouseSearch;
 use yii\web\UploadedFile;
 use yii\filters\AccessControl;
+use app\models\UploadPicture;
 /**
  * ItemController implements the CRUD actions for Item model.
  */
@@ -67,6 +68,16 @@ class ItemController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    public function actionViewImage($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->imagefile) {
+            return $this->renderAjax('view-image', ['model' => $model]);
+        } else {
+            return "Image not available.";
+        }
     }
 
     public function actionDetails($id_item)
@@ -134,40 +145,51 @@ class ItemController extends Controller
     public function actionCreate()
     {
         $model = new Item();
+        $uploadModel = new UploadPicture();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post())) {
-                 // Get the uploaded file instance
-                
-                
-                // Check if SKU is empty
-                if (empty($model->SKU)) {
-                    $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 4));
-                    // Generate random string
-                    $model->SKU = $randomStr . "-" . rand(1, 100); // Create SKU with random string
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            $uploadModel->imageFile = UploadedFile::getInstance($uploadModel, 'imageFile');
+
+            // Generate SKU if empty
+            if (empty($model->SKU)) {
+                $model->SKU = $this->generateSKU();
+            }
+
+            // Save the uploaded image
+            if ($uploadModel->imageFile && $uploadModel->validate()) {
+                $imageFileName = $uploadModel->upload();
+                if ($imageFileName) {
+                    $model->imagefile = $imageFileName; // assuming `image` is a field in Item table
                 }
-                //$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                //if (!$model->imageFile || !$model->imageFile->tempName) {
-                //    // If imageFile is null or doesn't have a tempName, the file wasn't uploaded correctly
-                //    Yii::error('File upload failed.');
-                //    return false;
-                //}
-                
-                //if ($model->upload()) {
-                // Save the model and redirect if successful
-                if ($model->save()) {
-                    return $this->redirect(['index']);
-                //}
-                }
+            }
+
+            if ($model->save()) {
+                return $this->redirect(['index']);
             }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'uploadModel' => $uploadModel,
         ]);
     }
 
     
+    public function actionPicUpload(){
+        //code here
+    }
+
+    protected function generateSKU(){
+        do {
+            $randomStr = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $randomStr2 = strtoupper(substr(preg_replace('/[^A-Z]/', '', Yii::$app->security->generateRandomString()), 0, 2));
+            $autosku = $randomStr . random_int(0, 9) . random_int(0, 9) .'-' .  random_int(0, 9) . random_int(0, 9). $randomStr2;
+        } while (Item::find()->where(['SKU' => $autosku])->exists());
+
+        return $autosku;
+    }
+
 
     /**
      * Updates an existing Item model.
@@ -179,13 +201,30 @@ class ItemController extends Controller
     public function actionUpdate($id_item)
     {
         $model = $this->findModel($id_item);
+        $uploadModel = new UploadPicture();
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->load(Yii::$app->request->post());
+            $uploadModel->imageFile = UploadedFile::getInstance($uploadModel, 'imageFile');
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            // Generate SKU if empty
+            if (empty($model->SKU)) {
+                $model->SKU = $this->generateSKU();
+            }
+
+            // Save the uploaded image
+            if ($uploadModel->imageFile && $uploadModel->validate()) {
+                $imageFileName = $uploadModel->upload();
+                if ($imageFileName) {
+                    $model->imagefile = $imageFileName; // assuming `image` is a field in Item table
+                }
+            }
+            $model->save();
             return $this->redirect(['view', 'id_item' => $model->id_item]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'uploadModel' => $uploadModel,
         ]);
     }
 
@@ -240,5 +279,7 @@ class ItemController extends Controller
             'data' => $data,
         ]);
     }
+
+
 
 }

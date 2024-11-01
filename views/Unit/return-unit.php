@@ -12,6 +12,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="return-unit">
 <h1><?= Html::encode($this->title) ?></h1>
+    <p>
+    <?php //echo Html::a('Return Unit in Bulk', ['unit/bulk-return', 'id_item' =>Yii::$app->request->get('id_item')], ['class' => 'btn btn-success']) ?>
+    </p>
     <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model, 'id_unit')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'id_item')->hiddenInput()->label(false) ?>

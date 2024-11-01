@@ -38,7 +38,7 @@ class Item extends \yii\db\ActiveRecord
             [['item_name'], 'string', 'max' => 60],
             [['SKU'], 'string', 'max' => 50],
             [['SKU'], 'unique'],
-            ['imageFile', 'file', 'extensions' => 'jpg, jpeg, png', 'skipOnEmpty' => true, 'maxSize' => 1024 * 1024 * 5],
+            ['imageFile', 'string', 'max' => 255],
         ];
     }
     
