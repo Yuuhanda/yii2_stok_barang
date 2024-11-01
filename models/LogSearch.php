@@ -36,7 +36,8 @@ class LogSearch extends Model
                 'log_date' => 'unit_log.update_at',
             ])
             ->from('unit_log')
-            ->leftJoin('item_unit', 'unit_log.id_unit = item_unit.id_unit');
+            ->leftJoin('item_unit', 'unit_log.id_unit = item_unit.id_unit')
+            ->orderBy(['log_date'=> SORT_DESC]);
 
         // Load the search parameters
         $this->load($params);

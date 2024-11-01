@@ -77,6 +77,7 @@ class UnitLog extends \yii\db\ActiveRecord
         ->from('unit_log')
         ->leftJoin('item_unit', 'unit_log.id_unit = item_unit.id_unit')
         ->where(['item_unit.serial_number'=>$serial_number])
+        ->orderBy(['log_date'=> SORT_DESC])
         ->all();
 
         return $query;
