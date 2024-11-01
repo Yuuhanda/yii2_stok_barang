@@ -165,6 +165,7 @@ class ItemController extends Controller
             }
 
             if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Item Added successfully.');
                 return $this->redirect(['index']);
             }
         }
@@ -219,7 +220,8 @@ class ItemController extends Controller
                 }
             }
             $model->save();
-            return $this->redirect(['view', 'id_item' => $model->id_item]);
+            Yii::$app->session->setFlash('success', $model->item_name. ' updated successfully.');
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
