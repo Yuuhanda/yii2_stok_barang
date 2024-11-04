@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Query;
 use app\models\ItemUnit;
+use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
 /**
@@ -95,23 +96,40 @@ class Item extends \yii\db\ActiveRecord
     }
 
         //Data for dashboard. Summary for items for each status
-        public function getDashboard(){
-            $query = (new Query())
-                ->select([
-                    'item_name'=>'item.item_name',
-                    'SKU'=>'item.SKU',
-                    'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END)',
-                    'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
-                    'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
-                    'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
-                    'id_item'=>'item.id_item',
-                ])
-                ->from('item')
-                ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
-                ->groupBy("item.id_item"); // Group by id_item to get counts for each item
-        
-            $command = $query->createCommand();
-            $results = $command->queryAll();
-            return $results;
-            }
+    public function getDashboard(){
+        $query = (new Query())
+            ->select([
+                'item_name'=>'item.item_name',
+                'SKU'=>'item.SKU',
+                'available' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "1" AND item_unit.condition != 4 AND item_unit.condition != 5 THEN 1 END)',
+                'in_use' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "2" THEN 1 END)',
+                'in_repair' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "3" THEN 1 END)',
+                'lost' => 'COUNT(CASE WHEN TRIM(item_unit.status) = "4" THEN 1 END)',
+                'id_item'=>'item.id_item',
+            ])
+            ->from('item')
+            ->leftJoin('item_unit', 'item.id_item = item_unit.id_item')
+            ->groupBy("item.id_item"); // Group by id_item to get counts for each item
+    
+        $command = $query->createCommand();
+        $results = $command->queryAll();
+        return $results;
+    }
+
+    
+    public static function getUpdatedByOptions()
+    {
+        return \yii\helpers\ArrayHelper::map(User::find()->all(), 'id', 'username'); // Adjust fields as needed
+    }
+
+    public static function getWarehouseOptions()
+    {
+        return ArrayHelper::map(Warehouse::find()->all(), 'id_wh', 'wh_name');
+    }
+
+    public static function getEmployeeOptions()
+    {
+        return ArrayHelper::map(Employee::find()->all(), 'id_employee', 'emp_name');
+    }
+            
 }

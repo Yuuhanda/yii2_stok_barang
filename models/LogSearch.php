@@ -10,16 +10,17 @@ class LogSearch extends Model
 {
     public $serial_number;
     public $content;
-    public $log_date;
+    public $log_date_start;
+    public $log_date_end;
 
     /**
-     * Rules for validation (optional)
+     * Rules for validation
      */
     public function rules()
     {
         return [
             [['serial_number', 'content'], 'safe'],
-            [['log_date'], 'date', 'format' => 'php:Y-m-d'],
+            [['log_date_start', 'log_date_end'], 'date', 'format' => 'php:Y-m-d'],
         ];
     }
 
@@ -37,26 +38,34 @@ class LogSearch extends Model
             ])
             ->from('unit_log')
             ->leftJoin('item_unit', 'unit_log.id_unit = item_unit.id_unit')
-            ->orderBy(['log_date'=> SORT_DESC]);
-
+            ->orderBy(['log_date' => SORT_DESC]);
+            
         // Load the search parameters
         $this->load($params);
-
+            
         // Apply filtering conditions
         if (!$this->validate()) {
             // Return all records if validation fails
             $query->where('0=1');
         }
-
+    
         // Add conditions based on filters
         $query->andFilterWhere(['like', 'item_unit.serial_number', $this->serial_number])
-              ->andFilterWhere(['like', 'unit_log.content', $this->content])
-              ->andFilterWhere(['=', 'unit_log.update_at', $this->log_date]);
-
+              ->andFilterWhere(['like', 'unit_log.content', $this->content]);
+    
+        // Apply date range filtering
+        if ($this->log_date_start) {
+            $query->andFilterWhere(['>=', 'unit_log.update_at', $this->log_date_start . ' 00:00:00']);
+        }
+        if ($this->log_date_end) {
+            // Set the end date to the last second of the selected day
+            $query->andFilterWhere(['<=', 'unit_log.update_at', $this->log_date_end . ' 23:59:59']);
+        }
+    
         // Execute the query and return an ArrayDataProvider
         $command = $query->createCommand();
         $results = $command->queryAll();
-
+    
         return new ArrayDataProvider([
             'allModels' => $results,
             'pagination' => [
@@ -71,4 +80,5 @@ class LogSearch extends Model
             ],
         ]);
     }
+
 }

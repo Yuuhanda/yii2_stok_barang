@@ -87,6 +87,17 @@ $config = [
             },
         ],
 
+        'assetManager' => [
+            'bundles' => [
+                'kartik\select2\Select2Asset' => [
+                    'depends' => [
+                        'yii\web\JqueryAsset',
+                        'yii\bootstrap5\BootstrapAsset',  // Use Bootstrap 5 asset
+                    ],
+                ],
+            ],
+        ],
+
         
     ],
     'params' => $params,
