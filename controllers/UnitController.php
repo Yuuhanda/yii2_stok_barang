@@ -21,6 +21,7 @@ use app\models\DamagedSearch;
 use app\models\UploadForm;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use yii\web\UploadedFile;
+use app\models\DocUploaded;
 /**
  * UnitController implements the CRUD actions for ItemUnit model.
  */
@@ -449,6 +450,7 @@ class UnitController extends Controller
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                     $logController->actionRepairLog($model->id_unit);
+                    Yii::$app->session->setFlash('success', 'Unit sent to repair successfully.');
                     return $this->redirect(['damaged']);
                 }
                 return;
@@ -486,7 +488,8 @@ class UnitController extends Controller
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                     $logController = new LogController('log', Yii::$app); // Pass the required parameters to the controller
                     $logController->actionDoneRepairLog($model->id_unit);
-                    return $this->redirect(['damaged']);
+                    Yii::$app->session->setFlash('success', 'Unit repaired and updated.');
+                    return $this->redirect(['repair']);
                 }
                 return;
             }
@@ -502,43 +505,100 @@ class UnitController extends Controller
     public function actionBulkAdd($id_item)
     {
         $model = new UploadForm();
+        $session = Yii::$app->session;
+        $filemod = new DocUploaded();
     
         if (Yii::$app->request->isPost) {
             $model->file = UploadedFile::getInstance($model, 'file');
     
             if ($model->file && $model->validate()) {
-                // Load the spreadsheet directly from the temporary file path
-                $spreadsheet = IOFactory::load($model->file->tempName);
-                $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+                // Define the file path where the file should be saved
+                $filename = $model->upload();
+                $filePath = $filename['filePath'];
+                $fileName = $filename['fileName'];
     
-                $item = Item::findOne($id_item);
-                $skuPrefix = substr($item->SKU, 0, 4); // Assuming SKU is a property of Item
+                // Save the uploaded file
+                if (isset($filePath)) {
+                    // Store uploaded file record in DB
+                    $filemod->file_name = $fileName;
+                    $filemod->user_id = Yii::$app->user->id;
+                    $filemod->datetime = new \yii\db\Expression('NOW()');
+                    $filemod->save();
     
-                foreach ($sheetData as $rowIndex => $row) {
-                    // Skip the header row
-                    if ($rowIndex == 1) continue;
+                    // Load the spreadsheet from the saved file path
+                    $spreadsheet = IOFactory::load($filePath);
+                    $sheet = $spreadsheet->getActiveSheet();
     
-                    $unit = new ItemUnit();
-                    $unit->id_item = $id_item;
-                    $unit->status = 1; // New unit status
-                    $unit->id_wh = $row['A'] ?? null;
-                    $unit->condition = 1;
-                    // Generate a unique serial number
-                    $unit->serial_number = $row['B'] ?? $this->generateUniqueSerialNumber($skuPrefix);
-                    $unit->comment = $row['C'] ?? 'New Unit';
-                    $unit->updated_by = Yii::$app->user->id; // Assuming user is logged in
+                    // Retrieve the item and SKU prefix
+                    $item = Item::findOne($id_item);
+                    $skuPrefix = substr($item->SKU, 0, 4);
     
-                    $unit->save(false); // Save without validation for this bulk process
+                    $unitData = [];
+                    foreach ($sheet->toArray(null, true, true, true) as $rowIndex => $row) {
+                        if ($rowIndex == 1) continue; // Skip header
+    
+                        do {
+                            $serialNumber = $row['B'] ?? $this->generateUniqueSerialNumber($skuPrefix);
+                        } while (ItemUnit::find()->where(['serial_number' => $serialNumber])->exists());
+    
+                        // Prepare unit data and overwrite the spreadsheet row with updated data
+                        $unitData[] = [
+                            'id_item' => $id_item,
+                            'status' => 1,
+                            'id_wh' => $row['A'] ?? null,
+                            'condition' => 1,
+                            'serial_number' => $serialNumber,
+                            'comment' => $row['C'] ?? 'New Unit',
+                            'updated_by' => Yii::$app->user->id,
+                        ];
+    
+                        // Update the row in the spreadsheet with new values
+                        $sheet->setCellValue("A$rowIndex", $row['A'] ?? null); // Warehouse ID
+                        $sheet->setCellValue("B$rowIndex", $serialNumber);      // Serial Number
+                        $sheet->setCellValue("C$rowIndex", $row['C'] ?? 'New Unit'); // Comment
+                    }
+    
+                    // Save the updated spreadsheet to overwrite the original uploaded file
+                    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+                    $writer->save($filePath);
+    
+                    // Store unit data in session for preview
+                    $session->set('unitData', $unitData);
+                    $session->set('uploadedFileName', $fileName);
+    
+                    // Redirect to a preview page
+                    return $this->redirect(['bulk-add-preview']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to save uploaded file.');
+                    return $this->redirect(['index']);
                 }
-    
-                // Redirect to a success page after processing
-                Yii::$app->session->setFlash('success', 'Data saved successfully.');
-                return $this->redirect(['index']);
             }
         }
     
         return $this->render('mass-unit', ['model' => $model]);
     }
+    
+    
+    
+    public function actionBulkAddPreview()
+    {
+        $session = Yii::$app->session;
+        $unitData = $session->get('unitData', []);
+    
+        if (Yii::$app->request->isPost) {
+            foreach ($unitData as $data) {
+                $unit = new ItemUnit($data);
+                $unit->save(false); // Save without validation
+            }
+    
+            $session->remove('unitData'); // Clear session data
+            Yii::$app->session->setFlash('success', 'Data saved successfully.');
+            return $this->redirect(['index']);
+        }
+    
+        return $this->render('bulk-add-preview', ['unitData' => $unitData]);
+    }
+    
     
 
     protected function generateUniqueSerialNumber($skuPrefix)
@@ -551,7 +611,5 @@ class UnitController extends Controller
 
         return $serialNumber;
     }
-    //public function actionBulkReturn(){
-//
-    //}
+    
 }
