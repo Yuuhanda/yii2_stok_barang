@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use yii\console\Controller;
+use Yii;
 
 class RbacController extends Controller
 {
@@ -33,5 +34,22 @@ class RbacController extends Controller
         $auth->assign($superadmin, 1);
 
         echo "RBAC successfully initialized!";
+    }
+
+    public function actionList()
+    {
+        $auth = Yii::$app->authManager;
+
+        // List roles
+        echo "Roles:\n";
+        foreach ($auth->getRoles() as $role) {
+            echo "- " . $role->name . "\n";
+        }
+
+        // List permissions
+        echo "\nPermissions:\n";
+        foreach ($auth->getPermissions() as $permission) {
+            echo "- " . $permission->name . "\n";
+        }
     }
 }

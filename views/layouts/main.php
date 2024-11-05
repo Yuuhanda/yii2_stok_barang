@@ -50,7 +50,8 @@ echo Nav::widget([
             'label' => 'Inventory',
             'items' => [
                 ['label' => 'Master Inventory', 'url' => ['/item/index']],
-                ['label' => 'Manage Unit', 'url' => ['/unit/index']],
+                ['label' => 'Manage Unit', 'url' => ['/unit/index'], 'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)],
                 ['label' => 'Bulk Upload History', 'url' => ['/docs/index']],
                 ['label' => 'Unit Usage Log', 'url' => ['/log/index']],
             ], 'visible' => !Yii::$app->user->isGuest,
@@ -61,20 +62,24 @@ echo Nav::widget([
             'items' => [
                 ['label' => 'Unit Loaning', 'url' => ['/lending/index']],
                 ['label' => 'Loaning List', 'url' => ['/lending/list']],
-            ], 'visible' => !Yii::$app->user->isGuest,
+            ], 'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0),
         ],
         // Unit Damaged & In-Repair Dropdown
         [
             'label' => 'Damaged & In-Repair Unit',
             'items' => [
                 ['label' => 'Damaged Unit', 'url' => ['/unit/damaged']],
-                ['label' => 'Unit In-Repair', 'url' => ['/unit/repair']],
-            ], 'visible' => !Yii::$app->user->isGuest
+                ['label' => 'Unit In-Repair', 'url' => ['/unit/repair'], 'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 2)],
+            ], 
         ],
         // Single Links
-        ['label' => 'Search & Edit Unit Data', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Search & Edit Unit Data', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)],
         ['label' => 'Warehouse', 'url' => ['/warehouse/index'], 'visible' => !Yii::$app->user->isGuest],
-        ['label' => 'Employee', 'url' => ['/employee/index'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Employee', 'url' => ['/employee/index'],'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)],
         [
             'label' => 'Admin List',
             'url' => ['/user/index'],

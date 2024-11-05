@@ -45,11 +45,20 @@ class ItemController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'roles' => ['@'], // allow authenticated users (logged in)
+                            'roles' => ['Admin'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => true,
+                            'roles' => ['superadmin'], // allow authenticated users (logged in)
                         ],
                         [
                             'allow' => false,
-                            'roles' => ['?'], // deny guests
+                            'actions' =>['create','update'],
+                            'roles' => ['maintenance'], // deny guests
+                        ],
+                        [
+                            'allow' => true,
+                            'roles' => ['maintenance'], // deny guests
                         ],
                     ],
                 ],
