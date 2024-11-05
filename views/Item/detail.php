@@ -31,49 +31,74 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'condition',
-                'filter' => Html::beginTag('div', ['class' => 'dropdown']) .
-                            Html::button('Select condition', [
-                                'class' => 'btn btn-secondary dropdown-toggle',
-                                'type' => 'button',
-                                'id' => 'dropdownCondition',
-                                'data-bs-toggle' => 'dropdown',
-                                'aria-expanded' => 'false',
-                            ]) .
-                            Html::beginTag('ul', ['class' => 'dropdown-menu', 'aria-labelledby' => 'dropdownCondition']) .
-                                Html::tag('li', Html::a('OK', ['details', 'UnitSearch[condition]' => 'OK', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('Lightly damaged', ['details', 'UnitSearch[condition]' => 'Lightly damaged', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('Moderately damaged', ['details', 'UnitSearch[condition]' => 'Moderately damaged', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('Major damage', ['details', 'UnitSearch[condition]' => 'Major damage', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('Total loss', ['details', 'UnitSearch[condition]' => 'Total loss', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                            Html::endTag('ul') .
-                            Html::endTag('div'),
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'condition',
+                    'data' => $conditionList, 
+                    'options' => ['placeholder' => 'Select Unit Condition'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
             ],
             'serial_number',
             'id_unit',
 
             [
+            'attribute' => 'status',
+            'filter' => Select2::widget([
+                'model' => $searchModel,
                 'attribute' => 'status',
-                'filter' => Html::beginTag('div', ['class' => 'dropdown']) .
-                            Html::button('Select status', [
-                                'class' => 'btn btn-secondary dropdown-toggle',
-                                'type' => 'button',
-                                'id' => 'dropdownStatus',
-                                'data-bs-toggle' => 'dropdown',
-                                'aria-expanded' => 'false',
-                            ]) .
-                            Html::beginTag('ul', ['class' => 'dropdown-menu', 'aria-labelledby' => 'dropdownStatus']) .
-                                Html::tag('li', Html::a('Available in warehouse', ['details', 'UnitSearch[status]' => 'Available in warehouse', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('Borrowed/lent', ['details', 'UnitSearch[status]' => 'Borrowed/lent', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('in-repair', ['details', 'UnitSearch[status]' => 'in-repair', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                                Html::tag('li', Html::a('totalled or lost', ['details', 'UnitSearch[status]' => 'totalled or lost', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'dropdown-item'])) .
-                            Html::endTag('ul') .
-                            Html::endTag('div'),
-            ],
+                'data' => $statusList, 
+                'options' => ['placeholder' => 'Select Status'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]),
+        ],
     
 
-            'updated_by',
-            'warehouse',
-            'employee',
+            // Updated by field with Select2
+        [
+            'attribute' => 'updated_by',
+            'filter' => Select2::widget([
+                'model' => $searchModel,
+                'attribute' => 'updated_by',
+                'data' => $updatedByList, // Assume $updatedByList contains a list of users
+                'options' => ['placeholder' => 'Select Updated By'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]),
+        ],
+
+        // Warehouse field with Select2
+        [
+            'attribute' => 'warehouse',
+            'filter' => Select2::widget([
+                'model' => $searchModel,
+                'attribute' => 'warehouse',
+                'data' => $warehouseList, // Assume $warehouseList contains a list of warehouses
+                'options' => ['placeholder' => 'Select Warehouse'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]),
+        ],
+
+        // Employee field with Select2
+        [
+            'attribute' => 'employee',
+            'filter' => Select2::widget([
+                'model' => $searchModel,
+                'attribute' => 'employee',
+                'data' => $employeeList, // Assume $employeeList contains a list of employees
+                'options' => ['placeholder' => 'Select Employee'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ]),
+        ],
 
             'comment',
             [

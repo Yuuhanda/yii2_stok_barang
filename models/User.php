@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Query;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 
 class User extends ActiveRecord implements IdentityInterface
@@ -177,6 +178,11 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         }
         return false;
+    }
+
+    public static function getUpdatedByList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'username'); // assuming 'id' and 'username' columns
     }
 }
 

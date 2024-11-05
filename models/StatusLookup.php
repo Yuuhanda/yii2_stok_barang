@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "status_lookup".
@@ -52,5 +53,10 @@ class StatusLookup extends \yii\db\ActiveRecord
     public function getItemUnits()
     {
         return $this->hasMany(ItemUnit::class, ['status' => 'id_status']);
+    }
+
+    public static function getStatusList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id_status', 'status_name'); // assuming 'id' and 'username' columns
     }
 }
