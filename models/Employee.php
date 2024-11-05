@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "employee".
@@ -85,5 +86,8 @@ class Employee extends \yii\db\ActiveRecord
         return $results;
     }
 
-
+    public static function getEmployeeList()
+    {
+        return ArrayHelper::map(Employee::find()->select('emp_name')->asArray()->all(), 'emp_name', 'emp_name');// assuming 'id' and 'name' columns
+    }
 }

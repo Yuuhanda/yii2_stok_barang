@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "warehouse".
  *
@@ -97,5 +98,10 @@ class Warehouse extends \yii\db\ActiveRecord
         $results = $command->queryAll();
         return $results;
 
+    }
+
+    public static function getWarehouseList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id_wh', 'wh_name'); // assuming 'id' and 'name' columns
     }
 }
