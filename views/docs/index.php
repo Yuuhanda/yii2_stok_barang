@@ -31,12 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'datetime',
             'username',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_doc' => $model['id_doc']]);
-                }
-            ],
-            [
                 'label' => 'Action',
                 'format' => 'raw',
                 'value' => function ($model) {

@@ -17,8 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Add New Item', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Export Data to .xlsx', ['export/export-main'], ['class' => 'btn btn-success']) ?>
+        <?php if (!Yii::$app->user->isGuest && (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)) { 
+            echo Html::a('Add New Item', ['create'], ['class' => 'btn btn-success']); }?>
+        <?php echo Html::a('Export Data to .xlsx', ['export/export-main'], ['class' => 'btn btn-success']);?>
     </p>
 
     <?= GridView::widget([
