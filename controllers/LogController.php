@@ -71,6 +71,19 @@ class LogController extends Controller
         ]);
     }
 
+    public function actionSearchResult($serial_number){
+        $searchModel = new LogSearch();
+        $params = Yii::$app->request->queryParams;
+        $params['LogSearch']['serial_number'] = $serial_number;
+        // Wrap the array in an ArrayDataProvider
+        $dataProvider = $dataProvider = $searchModel->search($params);
+
+        return $this->render('log-single', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
     /**
      * Displays a single UnitLog model.
      * @param int $id_log Id Log
@@ -339,21 +352,5 @@ class LogController extends Controller
         ]);
     }
 
-    public function actionSearchResult($serial_number){
-        $logdata = new UnitLog();
-        $logArray = $logdata->getLogSingle($serial_number);
-        // Wrap the array in an ArrayDataProvider
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $logArray,
-            'pagination' => [
-                'pageSize' => 10, // Adjust as needed
-            ],
-            'sort' => [
-                'attributes' => ['serial_number', 'content', 'log_date'],
-            ],
-        ]);
-        return $this->render('log-single', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+
 }
