@@ -81,13 +81,13 @@ class UnitSearch extends Model
         }
 
         // Add conditions based on filters
-        $query->andFilterWhere(['like', 'item_unit.serial_number', $this->serial_number])
-              ->andFilterWhere(['like', 'condition_lookup.condition_name', $this->condition])
-              ->andFilterWhere(['like', 'status_lookup.status_name', $this->status])
-              ->andFilterWhere(['like', 'user.username', $this->updated_by])
-              ->andFilterWhere(['like', 'warehouse.wh_name', $this->warehouse])
-              ->andFilterWhere(['like', 'employee.emp_name', $this->employee])
-              ->andFilterWhere(['like', 'item_unit.comment', $this->comment]);
+        $query->andFilterWhere(['item_unit.serial_number' => $this->serial_number])
+            ->andFilterWhere(['item_unit.condition' => $this->condition])
+            ->andFilterWhere(['item_unit.status' => $this->status])
+            ->andFilterWhere(['item_unit.updated_by' => $this->updated_by])
+            ->andFilterWhere(['item_unit.id_wh' => $this->warehouse])
+            ->andFilterHaving(['like', 'employee', $this->employee])
+            ->andFilterWhere(['item_unit.comment' => $this->comment]);
 
         // Execute the query and return an ArrayDataProvider
         $command = $query->createCommand();

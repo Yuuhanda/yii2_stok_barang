@@ -15,6 +15,11 @@ use app\models\WarehouseSearch;
 use yii\web\UploadedFile;
 use yii\filters\AccessControl;
 use app\models\UploadPicture;
+use app\models\User;
+use app\models\Employee;
+use app\models\Warehouse;
+use app\models\ConditionLookup;
+use app\models\StatusLookup;
 /**
  * ItemController implements the CRUD actions for Item model.
  */
@@ -85,7 +90,12 @@ class ItemController extends Controller
         // Create the search model and load the request data
         $searchModel = new UnitSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id_item); // Raw data results
-
+         // Retrieve lists for Select2 dropdowns
+         $updatedByList = User::getUpdatedByList();
+         $warehouseList = Warehouse::getWarehouseList();
+         $employeeList = Employee::getEmployeeList();
+         $statusList = StatusLookup::getStatusList();
+         $conditionList = ConditionLookup::getConditionList();
         // Wrap the raw results with ArrayDataProvider to enable pagination
         //$dataProvider = new ArrayDataProvider([
         //    'allModels' => $dataProvider, // Pass the raw data here
@@ -109,6 +119,11 @@ class ItemController extends Controller
         return $this->render('detail', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'updatedByList' => $updatedByList,
+            'warehouseList' => $warehouseList,
+            'employeeList' => $employeeList,
+            'statusList' => $statusList,
+            'conditionList' => $conditionList,
         ]);
     }
 
