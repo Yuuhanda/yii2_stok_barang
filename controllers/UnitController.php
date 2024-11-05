@@ -47,7 +47,21 @@ class UnitController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'roles' => ['@'], // allow authenticated users (logged in)
+                            'roles' => ['superadmin'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => false,
+                            'actions' => ['repair', 'unit-repair', 'finish-repair', 'get-broken-unit'],
+                            'roles' => ['Admin'], // deny guests
+                        ],
+                        [
+                            'allow' => true,
+                            'roles' => ['Admin'], // deny guests
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['repair', 'damaged', 'send-repair', 'unit-repair', 'finish-repair', 'get-broken-unit'],
+                            'roles' => ['maintenance'], // deny guests
                         ],
                         [
                             'allow' => false,

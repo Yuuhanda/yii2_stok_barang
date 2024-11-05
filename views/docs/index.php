@@ -10,16 +10,13 @@ use yii\grid\GridView;
 /** @var app\models\DocSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Doc Uploadeds';
+$this->title = 'Documents Uploaded';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="doc-uploaded-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Doc Uploaded', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
