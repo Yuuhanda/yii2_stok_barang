@@ -69,10 +69,10 @@ echo Nav::widget([
         [
             'label' => 'Damaged & In-Repair Unit',
             'items' => [
-                ['label' => 'Damaged Unit', 'url' => ['/unit/damaged']],
+                ['label' => 'Damaged Unit', 'url' => ['/unit/damaged'], 'visible' => !Yii::$app->user->isGuest],
                 ['label' => 'Unit In-Repair', 'url' => ['/unit/repair'], 'visible' => !Yii::$app->user->isGuest && 
             (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 2)],
-            ], 
+            ], 'visible' => !Yii::$app->user->isGuest
         ],
         // Single Links
         ['label' => 'Search & Edit Unit Data', 'url' => ['/unit/correction-search'], 'visible' => !Yii::$app->user->isGuest && 
