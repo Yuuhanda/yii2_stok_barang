@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <!-- Admin Level Dropdown -->
     <?= $form->field($model, 'superadmin')->dropDownList(
-        [0 => 'Admin', 1 => 'Super Admin'],  // Dropdown options
+        [0 => 'Admin', 1 => 'Super Admin', 2=>'Maintenance & Repair Officer'],  // Dropdown options
         ['prompt' => 'Select Admin Level']   // Optional prompt
     )->label('Admin Level') ?>
 

@@ -24,7 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'id_wh')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'condition')->dropDownList($condlist, ['prompt' => 'Select Unit Condition'])->label('Condition Name') ?>
         <!-- Dropdown for warehouses: visible wh_name but stores id_wh -->
-        <?= $form->field($model, 'id_wh')->dropDownList($whList, ['prompt' => 'Select Warehouse'])->label('Warehouse Name') ?>
+        <?= $form->field($model, 'id_wh')->dropDownList($whList, [
+            'prompt' => 'Select Warehouse',
+            'required' => true
+        ])->label('Warehouse Name') ?>
         <?= $form->field($model, 'comment') ?>
     
         <div class="form-group">

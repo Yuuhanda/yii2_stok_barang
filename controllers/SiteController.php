@@ -72,33 +72,53 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+    
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             // Get the current logged-in user's ID
             $userId = Yii::$app->user->identity->id;
-
+    
             // Fetch the user data from the user table
             $user = User::findOne($userId);
+    
+            // Initialize the AuthManager
+            $auth = Yii::$app->authManager;
+    
+            // Check if the user is a superadmin (1) or maintenance and repair officer (2)
+            if ($user) {
+        // Assuming $auth is your DbManager instance and $userId is the ID of the user being logged in
 
-             // Check if the user is a superadmin (assuming 1 means superadmin)
-            if ($user && $user->superadmin == 1) {
-                $auth = Yii::$app->authManager;
-            
-                // Check if the user already has the 'superadmin' role
-                if (!$auth->getAssignment('superadmin', $userId)) {
-                    $superadminRole = $auth->getRole('superadmin');
-                    $auth->assign($superadminRole, $userId);
+        if ($user->superadmin == 1) {
+            // Check if the user already has the 'superadmin' role
+            $superadminRole = $auth->getRole('superadmin');
+            if ($superadminRole !== null && !$auth->getAssignment('superadmin', $userId)) {
+                $auth->assign($superadminRole, $userId);
+            }
+            } elseif ($user->superadmin == 2) {
+                // Check if the user already has the 'maintenance' role
+                $maintenanceRole = $auth->getRole('maintenance');
+                if ($maintenanceRole !== null && !$auth->getAssignment('maintenance', $userId)) {
+                    $auth->assign($maintenanceRole, $userId);
+                }
+            }   elseif ($user->superadmin == 0) {
+                // Check if the user already has the 'maintenance' role
+                $adminRole = $auth->getRole('admin');
+                if ($adminRole !== null && !$auth->getAssignment('admin', $userId)) {
+                    $auth->assign($adminRole, $userId);
                 }
             }
+
+            }
+    
             return $this->redirect(['item/index']);
         }
-
+    
         $model->password = ''; // Clear the password field for security reasons
         return $this->render('login', [
             'model' => $model,
         ]);
     }
+    
 
 
     /**
