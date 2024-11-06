@@ -28,7 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'item_name',
             'SKU',
-            'available',
+            [
+                'attribute' => 'available',
+                //'contentOptions' => ['style' => 'width: 80px; text-align: right;'], 
+                'filter' => false, // Disable filter for this column
+            ],
             // Custom action buttons
             [
                 'class' => 'yii\grid\ActionColumn',

@@ -5,6 +5,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\widgets\ActiveForm;
+
 
 /** @var yii\web\View $this */
 /** @var app\models\LogSearch $searchModel */
@@ -16,11 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="unit-log-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?=  Html::a('Export Damaged Unit Data to XLSX', ['export/export-damaged'], [
-    'class' => 'btn btn-success',
-    'target' => '_blank',  // Opens in a new tab, optional
-    'data-method' => 'post',  // Send as POST request, optional for security reasons
-    ]);?>
+    <p>
+        <?php 
+            // Button to trigger hidden export form
+            echo Html::button('Export Data to .xlsx', [
+                'class' => 'btn btn-success',
+                'onclick' => "$('#export-form').submit();"
+            ]);
+        ?>
+    </p>
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -56,5 +62,18 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 
+<?php $exportForm = ActiveForm::begin([
+        'id' => 'export-form',
+        'method' => 'post',
+        'action' => ['export/export-damaged'],
+    ]); ?>
 
+        <?= Html::hiddenInput('DamagedSearch[condition]', $searchModel->condition) ?>
+        <?= Html::hiddenInput('DamagedSearch[serial_number]', $searchModel->serial_number) ?>
+        <?= Html::hiddenInput('DamagedSearch[status]', $searchModel->status) ?>
+        <?= Html::hiddenInput('DamagedSearch[updated_by]', $searchModel->updated_by) ?>
+        <?= Html::hiddenInput('DamagedSearch[warehouse]', $searchModel->warehouse) ?>
+        <?= Html::hiddenInput('DamagedSearch[comment]', $searchModel->comment) ?>
+
+    <?php ActiveForm::end(); ?>
 </div>

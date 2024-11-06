@@ -5,6 +5,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use kartik\date\DatePicker;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\LendigSearch $searchModel */
@@ -17,30 +19,43 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?=  Html::a('Export Lending Data to XLSX', ['export/export-lending'], [
-    'class' => 'btn btn-success',
-    'target' => '_blank',  // Opens in a new tab, optional
-    'data-method' => 'post',  // Send as POST request, optional for security reasons
-    ]);?>
+    <p>
+        <?php 
+            // Button to trigger hidden export form
+            echo Html::button('Export Data to .xlsx', [
+                'class' => 'btn btn-success',
+                'onclick' => "$('#export-form').submit();"
+            ]);
+        ?>
+    </p>
+
     <?= GridView::widget([
-    'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
-    'columns' => [
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'serial_number',
             'employee',
             'updated_by',
             'comment',
-            'date',
-            // Custom action buttons
+            [
+                'attribute' => 'date',
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'date',
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd', // Adjust to your preferred format
+                    ],
+                ]),
+                'format' => 'date', // Format the date in the grid
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{returnunit}', // Specify the buttons
-                'header' => 'Action', 
+                'template' => '{returnunit}',
+                'header' => 'Action',
                 'buttons' => [
                     'returnunit' => function ($url, $model, $key) {
-                        // Create the "See Detail In Warehouse" button
                         return Html::a('Return', ['unit/return-unit', 'id_unit' => $model['id_unit']], ['class' => 'btn btn-primary']);
                     },
                 ],
@@ -48,6 +63,18 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
+    <?php $exportForm = ActiveForm::begin([
+        'id' => 'export-form',
+        'method' => 'post',
+        'action' => ['export/export-lending'],
+    ]); ?>
 
+        <?= Html::hiddenInput('LendingSearch[serial_number]', $searchModel->serial_number) ?>
+        <?= Html::hiddenInput('LendingSearch[updated_by]', $searchModel->updated_by) ?>
+        <?= Html::hiddenInput('LendingSearch[employee]', $searchModel->employee) ?>
+        <?= Html::hiddenInput('LendingSearch[comment]', $searchModel->comment) ?>
+        <?= Html::hiddenInput('LendingSearch[date]', $searchModel->date) ?>
+
+    <?php ActiveForm::end(); ?>
 
 </div>

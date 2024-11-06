@@ -23,7 +23,7 @@ class LendingSearch extends Model
     {
         return [
             [['serial_number', 'employee', 'updated_by', 'comment'], 'safe'],
-            [['date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['date'], 'date', 'format' => 'php:Y-m-d'],
             [['id_unit', 'id_lending'], 'integer'],
         ];
     }
