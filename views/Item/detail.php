@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use kartik\select2\Select2;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\UnitSearch $searchModel */
@@ -19,7 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Export to .xlsx', ['export/item-detail', 'id_item' => Yii::$app->request->get('id_item')], ['class' => 'btn btn-success']) ?>
+        <?php 
+            // Button to trigger hidden export form
+            echo Html::button('Export Data to .xlsx', [
+                'class' => 'btn btn-success',
+                'onclick' => "$('#export-form').submit();"
+            ]);
+        ?>
+    </p>
     </p>
 
     <?= GridView::widget([
@@ -127,4 +135,20 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
     ]); ?>
+
+    <?php $exportForm = ActiveForm::begin([
+        'id' => 'export-form',
+        'method' => 'post',
+        'action' => ['export/item-detail', 'id_item' => Yii::$app->request->get('id_item')],
+    ]); ?>
+
+        <?= Html::hiddenInput('UnitSearch[condition]', $searchModel->condition) ?>
+        <?= Html::hiddenInput('UnitSearch[serial_number]', $searchModel->serial_number) ?>
+        <?= Html::hiddenInput('UnitSearch[status]', $searchModel->status) ?>
+        <?= Html::hiddenInput('UnitSearch[updated_by]', $searchModel->updated_by) ?>
+        <?= Html::hiddenInput('UnitSearch[warehouse]', $searchModel->warehouse) ?>
+        <?= Html::hiddenInput('UnitSearch[employee]', $searchModel->employee) ?>
+        <?= Html::hiddenInput('UnitSearch[comment]', $searchModel->comment) ?>
+
+    <?php ActiveForm::end(); ?>
 </div>

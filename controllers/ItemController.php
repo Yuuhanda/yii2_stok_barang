@@ -105,24 +105,6 @@ class ItemController extends Controller
          $employeeList = Employee::getEmployeeList();
          $statusList = StatusLookup::getStatusList();
          $conditionList = ConditionLookup::getConditionList();
-        // Wrap the raw results with ArrayDataProvider to enable pagination
-        //$dataProvider = new ArrayDataProvider([
-        //    'allModels' => $dataProvider, // Pass the raw data here
-        //    'pagination' => [
-        //        'pageSize' => 10, // Adjust the page size as needed
-        //    ],
-        //    'sort' => [
-        //        'attributes' => [
-        //            'serial_number',
-        //            'condition',
-        //            'status',
-        //            'updated_by',
-        //            'warehouse',
-        //            'employee',
-        //            'comment',
-        //        ],
-        //    ],
-        //]);
 
         // Render the view with the search model and data provider
         return $this->render('detail', [
