@@ -33,18 +33,22 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'available',
                 'contentOptions' => ['style' => 'width: 80px; text-align: right;'], // Adjust width as needed
+                'filter' => false, // Disable filter for this column
             ],
             [
                 'attribute' => 'in_use',
                 'contentOptions' => ['style' => 'width: 80px; text-align: right;'], // Adjust width as needed
+                'filter' => false, // Disable filter for this column
             ],
             [
                 'attribute' => 'in_repair',
                 'contentOptions' => ['style' => 'width: 80px; text-align: right;'], // Adjust width as needed
+                'filter' => false, // Disable filter for this column
             ],
             [
                 'attribute' => 'lost',
                 'contentOptions' => ['style' => 'width: 80px; text-align: right;'], // Adjust width as needed
+                'filter' => false, // Disable filter for this column
             ],
             
             [

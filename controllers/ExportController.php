@@ -13,7 +13,8 @@ use app\models\ItemSearch;
 use app\models\Warehouse;
 use app\models\LogSearch;
 use app\models\UnitSearch;
-
+use app\models\LendingSearch;
+use app\models\DamagedSearch;
 class ExportController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -57,9 +58,28 @@ class ExportController extends \yii\web\Controller
 
     public function actionExportLending()
     {
+        $searchModel = new LendingSearch();
+
+        //filter params
+        $params = Yii::$app->request->post();
+
+        // Load parameters directly into the search model to ensure they apply
+        if (!$searchModel->load($params) || !$searchModel->validate()) {
+            // If params do not load or validate, handle it (e.g., return all data or show an error)
+            Yii::$app->session->setFlash('error', 'Invalid search parameters for export.');
+            return $this->redirect(['lending/list']);
+        }
+        //echo var_dump($params);
+        //exit();
+        // Get the data provider with params applied
+        $dataProvider = $searchModel->search($params);
+        $dataProvider->pagination = false; // Disable pagination for export
+
+        $items = $dataProvider->getModels(); // Retrieve data with filters applied
+        
         // Fetch data (for example, from a model)
-        $lendingmodel = new Lending();
-        $items = $lendingmodel->getLendingList();  // change it to calling getLendingList in Lending model
+        //$lendingmodel = new Lending();
+        //$items = $lendingmodel->getLendingList();  // change it to calling getLendingList in Lending model
 
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
@@ -96,9 +116,26 @@ class ExportController extends \yii\web\Controller
 
     public function actionExportDamaged()
     {
-        // Fetch data 
-        $itemmodel = new ItemUnit();
-        $items = $itemmodel->getBrokenUnit(); 
+        $unitModel = new ItemUnit();
+        $damagedlist = $unitModel->getBrokenUnit();
+
+        //filter params
+         $params = Yii::$app->request->post();   
+        // Initialize search model
+
+        $searchModel = new DamagedSearch();
+        
+        // Load parameters directly into the search model to ensure they apply
+        if (!$searchModel->load($params) || !$searchModel->validate()) {
+            // If params do not load or validate, handle it (e.g., return all data or show an error)
+            Yii::$app->session->setFlash('error', 'Invalid search parameters for export.');
+            return $this->redirect(['unit/damaged']);
+        }
+        // Filter the data based on search input
+        $dataProvider = $searchModel->search($params, $damagedlist);
+        $dataProvider->pagination = false; // Disable pagination for export
+
+        $items =  $dataProvider->getModels(); // Retrieve data with filters applied
 
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
@@ -136,8 +173,23 @@ class ExportController extends \yii\web\Controller
 
     public function actionExportRepair()
     {
-        $itemmodel = new ItemUnit();
-        $items = $itemmodel->getUnitRepair(); 
+        $searchModel = new DamagedSearch();
+        
+        $params = Yii::$app->request->post();
+
+        // Load parameters directly into the search model to ensure they apply
+        if (!$searchModel->load($params) || !$searchModel->validate()) {
+            // If params do not load or validate, handle it (e.g., return all data or show an error)
+            Yii::$app->session->setFlash('error', 'Invalid search parameters for export.');
+            return $this->redirect(['unit/repair']);
+        }
+        //echo var_dump($params);
+        //exit();
+        // Get the data provider with params applied
+        $dataProvider = $searchModel->searchRepair($params);
+        $dataProvider->pagination = false; // Disable pagination for export
+
+        $items = $dataProvider->getModels(); 
 
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
