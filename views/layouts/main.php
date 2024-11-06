@@ -52,7 +52,8 @@ echo Nav::widget([
                 ['label' => 'Master Inventory', 'url' => ['/item/index']],
                 ['label' => 'Manage Unit', 'url' => ['/unit/index'], 'visible' => !Yii::$app->user->isGuest && 
             (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)],
-                ['label' => 'Bulk Upload History', 'url' => ['/docs/index']],
+                ['label' => 'Bulk Upload History', 'url' => ['/docs/index'], 'visible' => !Yii::$app->user->isGuest && 
+            (Yii::$app->user->identity->superadmin == 1 || Yii::$app->user->identity->superadmin == 0)],
                 ['label' => 'Unit Usage Log', 'url' => ['/log/index']],
             ], 'visible' => !Yii::$app->user->isGuest,
         ],
