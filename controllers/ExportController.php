@@ -12,6 +12,7 @@ use Yii;
 use app\models\ItemSearch;
 use app\models\Warehouse;
 use app\models\LogSearch;
+use app\models\UnitSearch;
 
 class ExportController extends \yii\web\Controller
 {
@@ -295,8 +296,24 @@ class ExportController extends \yii\web\Controller
     }
 
     public function actionItemDetail($id_item){
-        $itemmodel = new ItemUnit();
-        $items = $itemmodel->getItemDetail($id_item); 
+        $searchModel = new UnitSearch();
+
+        //params filter
+        $params = Yii::$app->request->post();
+
+        // Load parameters directly into the search model to ensure they apply
+        //if (!$searchModel->load($params) || !$searchModel->validate()) {
+        //    // If params do not load or validate, handle it (e.g., return all data or show an error)
+        //    Yii::$app->session->setFlash('error', 'Invalid search parameters for export.');
+        //    return $this->redirect(['item/details?id_item='.$id_item]);
+        //}
+
+        
+        // Get the data provider with params applied
+        $dataProvider = $searchModel->search($params, $id_item);
+        $dataProvider->pagination = false; // Disable pagination for export
+
+        $items = $dataProvider->getModels(); 
 
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
