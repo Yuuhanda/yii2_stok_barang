@@ -62,7 +62,12 @@ class LogController extends Controller
     public function actionIndex()
     {
         $searchModel = new LogSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // Load parameters
+        $params = Yii::$app->request->queryParams;
+        $dataProvider = $searchModel->search($params);
+        
+        // Store search parameters in session
+        Yii::$app->session->set('logSearchParams', $params);
 
         // Render the view with the search model and data provider
         return $this->render('index', [

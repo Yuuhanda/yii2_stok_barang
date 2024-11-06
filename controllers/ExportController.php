@@ -11,6 +11,7 @@ use app\models\UnitLog;
 use Yii;
 use app\models\ItemSearch;
 use app\models\Warehouse;
+use app\models\LogSearch;
 
 class ExportController extends \yii\web\Controller
 {
@@ -172,37 +173,53 @@ class ExportController extends \yii\web\Controller
 
     public function actionExportLog()
     {
-        $itemmodel = new UnitLog();
-        $items = $itemmodel->getLogAll(); 
-
-        // Create new Spreadsheet object
+        $searchModel = new LogSearch();
+        
+        // Load parameters from POST
+        $params = Yii::$app->request->post();
+    
+        // Load parameters directly into the search model to ensure they apply
+        if (!$searchModel->load($params) || !$searchModel->validate()) {
+            // If params do not load or validate, handle it (e.g., return all data or show an error)
+            Yii::$app->session->setFlash('error', 'Invalid search parameters for export.');
+            return $this->redirect(['log/index']);
+        }
+    
+        // Get the data provider with params applied
+        $dataProvider = $searchModel->search($params);
+        $dataProvider->pagination = false; // Disable pagination for export
+    
+        $items = $dataProvider->getModels(); // Retrieve data with filters applied
+    
+        // Create Spreadsheet object and export logic (same as before)
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-
+    
         // Set headers
         $sheet->setCellValue('A1', 'serial_number');
         $sheet->setCellValue('B1', 'content');
         $sheet->setCellValue('C1', 'log_date');
-
+    
         // Populate data
-        $row = 2;  // Row starts after the headers
+        $row = 2;
         foreach ($items as $item) {
-            $sheet->setCellValue('A' . $row, $item['serial_number']);  // Access array keys instead of object properties
+            $sheet->setCellValue('A' . $row, $item['serial_number']);
             $sheet->setCellValue('B' . $row, $item['content']);
             $sheet->setCellValue('C' . $row, $item['log_date']);
             $row++;
         }
-
+    
         // Set filename and export
         $filename = 'exported_log_all_data_' . date('Y-m-d_H-i-s') . '.xlsx';
         $writer = new Xlsx($spreadsheet);
-
-        // Send file as response for download
+    
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         $writer->save('php://output');
         exit();
     }
+    
+    
 
     public function actionExportLogSingle($serial_number)
     {

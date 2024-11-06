@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
-
+use yii\filters\AccessControl;
 
 
 /**
@@ -26,9 +26,31 @@ class DocsController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['*'], // restrict access to all actions
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['superadmin'], // allow authenticated users (logged in)
+                        ],
+                        [
+                            'allow' => true,
+                            'roles' => ['Admin'], // deny guests
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['maintenance'], // deny guests
+                        ],
+                        [
+                            'allow' => false,
+                            'roles' => ['?'], // deny guests
+                        ],
                     ],
                 ],
             ]
