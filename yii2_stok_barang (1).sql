@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 02:19 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Nov 08, 2024 at 04:41 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,18 +31,21 @@ CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `auth_assignment`
 --
 
 INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
+('Admin', 5, 1730945009),
+('Admin', 7, 1730945017),
+('maintenance', 9, 1730950172),
+('sandbag', 10, 1730952624),
 ('superadmin', 1, 1730169714),
-('superadmin', 3, 1730185129),
-('superadmin', 4, 1730184962),
-('superadmin', 6, 1730251121),
-('superadmin', 8, 1730252448);
+('superadmin', 4, 1731036786),
+('superadmin', 8, 1730252448),
+('superadmin', 11, 1730952835);
 
 -- --------------------------------------------------------
 
@@ -59,7 +62,7 @@ CREATE TABLE `auth_item` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   `group_code` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `auth_item`
@@ -67,22 +70,6 @@ CREATE TABLE `auth_item` (
 
 INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`, `group_code`) VALUES
 ('/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('//*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//controller', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//crud', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//extension', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//form', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//index', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//model', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('//module', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/asset/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/asset/compress', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/asset/template', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/cache/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/cache/flush', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/cache/flush-all', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/cache/flush-schema', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/cache/index', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/debug/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/debug/default/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/debug/default/db-explain', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
@@ -93,9 +80,39 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/debug/user/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/debug/user/reset-identity', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/debug/user/set-identity', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/fixture/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/fixture/load', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/fixture/unload', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
+('/docs/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/docs/view-docs', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/document/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/employee/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-damaged', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-item-report', 3, NULL, NULL, NULL, 1731036360, 1731036360, NULL),
+('/export/export-lending', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-log-single', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-main', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-repair', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/export-unit-report', 3, NULL, NULL, NULL, 1731036360, 1731036360, NULL),
+('/export/export-xlsx', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/item-detail', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/warehouse', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/export/wh-dist', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/gii/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/gii/default/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/gii/default/action', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
@@ -103,33 +120,145 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/gii/default/index', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/gii/default/preview', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/gii/default/view', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('/hello/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/hello/index', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/help/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/help/index', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/help/list', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/help/list-action-options', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/help/usage', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/message/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/message/config', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/message/config-template', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/message/extract', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/create', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/down', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/fresh', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/history', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/mark', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/new', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/redo', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/to', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/migrate/up', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/serve/*', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
-('/serve/index', 3, NULL, NULL, NULL, 1729233880, 1729233880, NULL),
+('/item/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/dashboard-data', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/details', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/item-name', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/pic-upload', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/view-image', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/item/warehouse', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/item-report-active', 3, NULL, NULL, NULL, 1731030003, 1731030003, NULL),
+('/lending/lending-list', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/list', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/loan-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/unit-report-active', 3, NULL, NULL, NULL, 1731032938, 1731032938, NULL),
+('/lending/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/lending/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/done-repair-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/edit-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/lending-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/repair-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/return-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/search-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/search-result', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/log/view-log', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/rbac/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/rbac/init', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/rbac/list', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/about', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/captcha', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/contact', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/error', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/login', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/site/logout', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/add-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/available-lending', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/available-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/broken-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/bulk-add', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/bulk-add-preview', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/correction-search', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/correction-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/damaged', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/finish-repair', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/item-detail', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/repair', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/return-unit', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/send-repair', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/unit-repair', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/unit/warehouse-distribution', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/*', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
+('/user-management/auth-item-group/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/bulk-activate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/bulk-deactivate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/bulk-delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/grid-page-size', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/grid-sort', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/toggle-attribute', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth-item-group/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/captcha', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/auth/change-own-password', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
+('/user-management/auth/confirm-email', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/confirm-email-receive', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/confirm-registration-email', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/login', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/logout', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/password-recovery', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/password-recovery-receive', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/auth/registration', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/bulk-activate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/bulk-deactivate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/bulk-delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/grid-page-size', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/grid-sort', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/refresh-routes', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/set-child-permissions', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/set-child-routes', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/toggle-attribute', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/permission/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/bulk-activate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/bulk-deactivate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/bulk-delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/grid-page-size', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/grid-sort', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/set-child-permissions', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/set-child-roles', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/toggle-attribute', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/role/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-permission/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/user-permission/set', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user-permission/set-roles', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
+('/user-management/user-visit-log/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/bulk-activate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/bulk-deactivate', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/bulk-delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/grid-page-size', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/grid-sort', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/toggle-attribute', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user-visit-log/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user-management/user/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/user/bulk-activate', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user/bulk-deactivate', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user/bulk-delete', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
@@ -137,28 +266,62 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/user-management/user/create', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user/delete', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user/grid-page-size', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
+('/user-management/user/grid-sort', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/user/index', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
+('/user-management/user/toggle-attribute', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
 ('/user-management/user/update', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
 ('/user-management/user/view', 3, NULL, NULL, NULL, 1729233881, 1729233881, NULL),
-('Admin', 1, 'Admin', NULL, NULL, 1729233881, 1729233881, NULL),
+('/user/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/generate-auth-keys', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/toggle-status', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/user/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/*', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/create', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/delete', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/index', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/item', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/update', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('/warehouse/view', 3, NULL, NULL, NULL, 1730945389, 1730945389, NULL),
+('Admin', 1, 'Warehouse Admin', NULL, NULL, 1729233881, 1730953614, NULL),
+('App Admin', 2, 'App Admin', NULL, NULL, 1730954049, 1730954049, NULL),
 ('assignRolesToUsers', 2, 'Assign roles to users', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
+('base', 2, 'BASE. REQUIRED TO USE THE APP', NULL, NULL, 1730946802, 1730952596, 'base'),
 ('bindUserToIp', 2, 'Bind user to IP', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
+('bulk-documents', 2, 'bulk-documents', NULL, NULL, 1730949029, 1730949029, 'inventory-master'),
 ('changeOwnPassword', 2, 'Change own password', NULL, NULL, 1729233881, 1729233881, 'userCommonPermissions'),
 ('changeUserPassword', 2, 'Change user password', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('commonPermission', 2, 'Common permission', NULL, NULL, 1729233880, 1729233880, NULL),
 ('createUsers', 2, 'Create users', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
+('damaged-list', 2, 'Damaged Unit', NULL, NULL, 1730949678, 1730951532, 'maintenance'),
 ('deleteUsers', 2, 'Delete users', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('editUserEmail', 2, 'Edit user email', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('editUsers', 2, 'Edit users', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
+('employee', 2, 'Employee', NULL, NULL, 1730949984, 1730951475, 'employee'),
+('god', 2, 'GOD MODE', NULL, NULL, 1730953358, 1730953358, 'god'),
+('inventory-view', 2, 'inventory view only', NULL, NULL, 1730962928, 1730963079, 'inventory-master'),
+('item-loan', 2, 'unit loaning', NULL, NULL, 1730949341, 1730949341, 'loaning'),
+('loan-list', 2, 'loan-list & return', NULL, NULL, 1730949508, 1730949508, 'loaning'),
+('loan-report', 2, 'loan-report', NULL, NULL, 1731032924, 1731032924, 'loaning'),
+('log-view', 2, 'log-view', NULL, NULL, 1730949125, 1730949125, 'inventory-master'),
+('maintenance', 1, 'Maintenance & Repair Officer', NULL, NULL, 1730943897, 1730953864, NULL),
+('manage-unit', 2, 'manage-unit', NULL, NULL, 1730948658, 1730948658, 'inventory-master'),
 ('manageItems', 2, 'Manage items', NULL, NULL, 1730169714, 1730169714, NULL),
-('superadmin', 1, NULL, NULL, NULL, 1730169714, 1730169714, NULL),
-('user', 1, NULL, NULL, NULL, 1730169714, 1730169714, NULL),
+('master-inventory', 2, 'master-inventory', NULL, NULL, 1730944559, 1730947946, 'inventory-master'),
+('repair-list', 2, 'Unit In-repair', NULL, NULL, 1730950949, 1730951420, 'maintenance'),
+('sandbag', 1, 'rbac test', NULL, NULL, 1730952500, 1730952500, NULL),
+('superadmin', 1, 'App Admin', NULL, NULL, 1730169714, 1730953801, NULL),
 ('viewItems', 2, 'View items', NULL, NULL, 1730169714, 1730169714, NULL),
 ('viewRegistrationIp', 2, 'View registration IP', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('viewUserEmail', 2, 'View user email', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('viewUserRoles', 2, 'View user roles', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
 ('viewUsers', 2, 'View users', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
-('viewVisitLog', 2, 'View visit log', NULL, NULL, 1729233881, 1729233881, 'userManagement');
+('viewVisitLog', 2, 'View visit log', NULL, NULL, 1729233881, 1729233881, 'userManagement'),
+('warehouse', 2, 'Warehouse', NULL, NULL, 1730949846, 1730951487, 'warehouse'),
+('warehouse-view', 2, 'warehouse-view-only', NULL, NULL, 1730964440, 1730964440, 'warehouse');
 
 -- --------------------------------------------------------
 
@@ -169,29 +332,69 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 CREATE TABLE `auth_item_child` (
   `parent` varchar(64) NOT NULL,
   `child` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `auth_item_child`
 --
 
 INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
-('Admin', 'assignRolesToUsers'),
+('Admin', 'base'),
+('Admin', 'bulk-documents'),
 ('Admin', 'changeOwnPassword'),
-('Admin', 'changeUserPassword'),
-('Admin', 'createUsers'),
-('Admin', 'deleteUsers'),
-('Admin', 'editUsers'),
-('Admin', 'viewUsers'),
+('Admin', 'damaged-list'),
+('Admin', 'employee'),
+('Admin', 'item-loan'),
+('Admin', 'loan-list'),
+('Admin', 'loan-report'),
+('Admin', 'log-view'),
+('Admin', 'manage-unit'),
+('Admin', 'master-inventory'),
+('Admin', 'warehouse'),
+('App Admin', '/user-management/user-visit-log/*'),
+('App Admin', 'assignRolesToUsers'),
+('App Admin', 'base'),
+('App Admin', 'bindUserToIp'),
+('App Admin', 'bulk-documents'),
+('App Admin', 'changeOwnPassword'),
+('App Admin', 'changeUserPassword'),
+('App Admin', 'createUsers'),
+('App Admin', 'damaged-list'),
+('App Admin', 'deleteUsers'),
+('App Admin', 'editUserEmail'),
+('App Admin', 'editUsers'),
+('App Admin', 'employee'),
+('App Admin', 'item-loan'),
+('App Admin', 'loan-list'),
+('App Admin', 'log-view'),
+('App Admin', 'manage-unit'),
+('App Admin', 'manageItems'),
+('App Admin', 'master-inventory'),
+('App Admin', 'repair-list'),
+('App Admin', 'viewItems'),
+('App Admin', 'viewRegistrationIp'),
+('App Admin', 'viewUserEmail'),
+('App Admin', 'viewUserRoles'),
+('App Admin', 'viewUsers'),
+('App Admin', 'viewVisitLog'),
+('App Admin', 'warehouse'),
 ('assignRolesToUsers', '/user-management/user-permission/set'),
 ('assignRolesToUsers', '/user-management/user-permission/set-roles'),
 ('assignRolesToUsers', 'viewUserRoles'),
 ('assignRolesToUsers', 'viewUsers'),
+('base', '/site/*'),
+('bulk-documents', '/docs/index'),
+('bulk-documents', '/docs/update'),
+('bulk-documents', '/docs/view'),
+('bulk-documents', '/docs/view-docs'),
 ('changeOwnPassword', '/user-management/auth/change-own-password'),
 ('changeUserPassword', '/user-management/user/change-password'),
 ('changeUserPassword', 'viewUsers'),
 ('createUsers', '/user-management/user/create'),
 ('createUsers', 'viewUsers'),
+('damaged-list', '/export/export-damaged'),
+('damaged-list', '/unit/damaged'),
+('damaged-list', '/unit/send-repair'),
 ('deleteUsers', '/user-management/user/bulk-delete'),
 ('deleteUsers', '/user-management/user/delete'),
 ('deleteUsers', 'viewUsers'),
@@ -200,12 +403,141 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('editUsers', '/user-management/user/bulk-deactivate'),
 ('editUsers', '/user-management/user/update'),
 ('editUsers', 'viewUsers'),
+('employee', '/employee/*'),
+('god', '/*'),
+('god', 'assignRolesToUsers'),
+('god', 'base'),
+('god', 'bindUserToIp'),
+('god', 'bulk-documents'),
+('god', 'changeOwnPassword'),
+('god', 'changeUserPassword'),
+('god', 'createUsers'),
+('god', 'damaged-list'),
+('god', 'deleteUsers'),
+('god', 'editUserEmail'),
+('god', 'editUsers'),
+('god', 'employee'),
+('god', 'item-loan'),
+('god', 'loan-list'),
+('god', 'log-view'),
+('god', 'manage-unit'),
+('god', 'manageItems'),
+('god', 'master-inventory'),
+('god', 'repair-list'),
+('god', 'viewItems'),
+('god', 'viewRegistrationIp'),
+('god', 'viewUserEmail'),
+('god', 'viewUserRoles'),
+('god', 'viewUsers'),
+('god', 'viewVisitLog'),
+('god', 'warehouse'),
+('inventory-view', '/export/export-main'),
+('inventory-view', '/export/item-detail'),
+('inventory-view', '/item/dashboard-data'),
+('inventory-view', '/item/details'),
+('inventory-view', '/item/index'),
+('inventory-view', '/item/item-name'),
+('inventory-view', '/item/view'),
+('inventory-view', '/item/view-image'),
+('inventory-view', '/item/warehouse'),
+('item-loan', '/lending/create'),
+('item-loan', '/lending/index'),
+('item-loan', '/lending/loan-unit'),
+('loan-list', '/export/export-lending'),
+('loan-list', '/lending/lending-list'),
+('loan-list', '/lending/list'),
+('loan-list', '/lending/update'),
+('loan-list', '/unit/return-unit'),
+('loan-report', '/export/export-item-report'),
+('loan-report', '/export/export-unit-report'),
+('loan-report', '/lending/item-report-active'),
+('loan-report', '/lending/unit-report-active'),
+('log-view', '/export/export-log'),
+('log-view', '/export/export-log-single'),
+('log-view', '/log/edit-log'),
+('log-view', '/log/index'),
+('log-view', '/log/search-result'),
+('log-view', '/log/view'),
+('log-view', '/log/view-log'),
+('maintenance', 'base'),
+('maintenance', 'changeOwnPassword'),
+('maintenance', 'damaged-list'),
+('maintenance', 'inventory-view'),
+('maintenance', 'log-view'),
+('maintenance', 'repair-list'),
+('maintenance', 'warehouse'),
+('manage-unit', '/unit/add-unit'),
+('manage-unit', '/unit/available-lending'),
+('manage-unit', '/unit/available-unit'),
+('manage-unit', '/unit/bulk-add'),
+('manage-unit', '/unit/bulk-add-preview'),
+('manage-unit', '/unit/create'),
+('manage-unit', '/unit/delete'),
+('manage-unit', '/unit/index'),
+('manage-unit', '/unit/update'),
+('manage-unit', '/unit/view'),
+('master-inventory', '/export/export-main'),
+('master-inventory', '/export/item-detail'),
+('master-inventory', '/export/wh-dist'),
+('master-inventory', '/item/*'),
+('master-inventory', '/item/create'),
+('master-inventory', '/item/dashboard-data'),
+('master-inventory', '/item/delete'),
+('master-inventory', '/item/details'),
+('master-inventory', '/item/index'),
+('master-inventory', '/item/item-name'),
+('master-inventory', '/item/pic-upload'),
+('master-inventory', '/item/update'),
+('master-inventory', '/item/view'),
+('master-inventory', '/item/view-image'),
+('master-inventory', '/item/warehouse'),
+('master-inventory', '/unit/correction-search'),
+('master-inventory', '/unit/correction-unit'),
+('master-inventory', 'viewItems'),
+('repair-list', '/export/export-repair'),
+('repair-list', '/unit/finish-repair'),
+('repair-list', '/unit/repair'),
+('sandbag', 'base'),
+('sandbag', 'inventory-view'),
+('sandbag', 'log-view'),
+('sandbag', 'warehouse-view'),
+('superadmin', 'App Admin'),
+('superadmin', 'assignRolesToUsers'),
+('superadmin', 'base'),
+('superadmin', 'bindUserToIp'),
+('superadmin', 'bulk-documents'),
+('superadmin', 'changeOwnPassword'),
+('superadmin', 'changeUserPassword'),
+('superadmin', 'createUsers'),
+('superadmin', 'damaged-list'),
+('superadmin', 'deleteUsers'),
+('superadmin', 'editUserEmail'),
+('superadmin', 'editUsers'),
+('superadmin', 'employee'),
+('superadmin', 'inventory-view'),
+('superadmin', 'item-loan'),
+('superadmin', 'loan-list'),
+('superadmin', 'loan-report'),
+('superadmin', 'log-view'),
+('superadmin', 'manage-unit'),
 ('superadmin', 'manageItems'),
-('superadmin', 'user'),
-('user', 'viewItems'),
+('superadmin', 'master-inventory'),
+('superadmin', 'repair-list'),
+('superadmin', 'viewItems'),
+('superadmin', 'viewRegistrationIp'),
+('superadmin', 'viewUserEmail'),
+('superadmin', 'viewUserRoles'),
+('superadmin', 'viewUsers'),
+('superadmin', 'viewVisitLog'),
+('superadmin', 'warehouse'),
 ('viewUsers', '/user-management/user/grid-page-size'),
 ('viewUsers', '/user-management/user/index'),
-('viewUsers', '/user-management/user/view');
+('viewUsers', '/user-management/user/view'),
+('warehouse', '/warehouse/*'),
+('warehouse-view', '/warehouse/*'),
+('warehouse-view', '/warehouse/index'),
+('warehouse-view', '/warehouse/item'),
+('warehouse-view', '/warehouse/view');
 
 -- --------------------------------------------------------
 
@@ -218,15 +550,28 @@ CREATE TABLE `auth_item_group` (
   `name` varchar(255) NOT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `auth_item_group`
 --
 
 INSERT INTO `auth_item_group` (`code`, `name`, `created_at`, `updated_at`) VALUES
+('admin-list', 'admin-list', 1730944343, 1730944343),
+('base', 'BASE. REQUIRED TO USE THE APP', 1730952588, 1730952588),
+('bulk-history', 'bulk-history', 1730944208, 1730944208),
+('docs', 'docs', 1730944385, 1730944385),
+('employee', 'employee', 1730944330, 1730944330),
+('export', 'export', 1730944397, 1730944397),
+('god', 'GOD MODE', 1730953336, 1730953336),
+('inventory-master', 'inventory-master', 1730944142, 1730944142),
+('loaning', 'loaning', 1730944247, 1730944247),
+('maintenance', 'maintenance', 1730944271, 1730946203),
+('manage-unit', 'manage-unit', 1730944191, 1730944191),
+('unit-log', 'unit-log', 1730944222, 1730944222),
 ('userCommonPermissions', 'User common permission', 1729233881, 1729233881),
-('userManagement', 'User management', 1729233881, 1729233881);
+('userManagement', 'User management', 1729233881, 1729233881),
+('warehouse', 'warehouse', 1730944302, 1730944302);
 
 -- --------------------------------------------------------
 
@@ -239,7 +584,7 @@ CREATE TABLE `auth_rule` (
   `data` text DEFAULT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -250,7 +595,7 @@ CREATE TABLE `auth_rule` (
 CREATE TABLE `condition_lookup` (
   `id_condition` tinyint(3) UNSIGNED NOT NULL,
   `condition_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `condition_lookup`
@@ -266,6 +611,26 @@ INSERT INTO `condition_lookup` (`id_condition`, `condition_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `doc_uploaded`
+--
+
+CREATE TABLE `doc_uploaded` (
+  `id_doc` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `datetime` datetime(2) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `doc_uploaded`
+--
+
+INSERT INTO `doc_uploaded` (`id_doc`, `file_name`, `datetime`, `user_id`) VALUES
+(1, 'bulk_unit651_1730948866.xlsx', '2024-11-07 10:07:46.00', 5);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `employee`
 --
 
@@ -275,7 +640,7 @@ CREATE TABLE `employee` (
   `phone` varchar(20) NOT NULL,
   `email` varchar(60) NOT NULL,
   `address` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employee`
@@ -285,7 +650,8 @@ INSERT INTO `employee` (`id_employee`, `emp_name`, `phone`, `email`, `address`) 
 (1, 'johan tumbal', '0888888', 'ayymail@lmao.com', 'jalan jalan aj'),
 (2, 'Emma', '0812121211212', 'emma@mail.com', 'a random street name'),
 (3, 'Tumbal', '08080808', 'tumbal@mail.com', 'jalan gk tau'),
-(4, 'Freddy', '0821321321', 'freddymail@mail.com', 'somewhere in a city');
+(4, 'Freddy', '0821321321', 'freddymail@mail.com', 'somewhere in a city'),
+(5, 'Shioriiiin', '081684316487', 'shiorin@ayymail.com', 'idk somewhere a');
 
 -- --------------------------------------------------------
 
@@ -298,21 +664,22 @@ CREATE TABLE `item` (
   `item_name` varchar(60) NOT NULL,
   `SKU` varchar(50) NOT NULL,
   `imagefile` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item`
 --
 
 INSERT INTO `item` (`id_item`, `item_name`, `SKU`, `imagefile`) VALUES
-(11, 'Generic Phone', 'BOGD-44', '376_1730358200.jpg'),
+(11, 'Generic Phone', 'BOGD-44', '629_1730945999.jpg'),
 (12, 'Generic Laptop', 'OJWL-41', '826_1730358216.gif'),
 (13, 'Generic Keyboard', 'BNKH-93', '518_1730358229.gif'),
 (14, 'Mousey Mouse', 'RGTD-6', '731_1730358250.jpeg'),
 (15, 'Generic item for stress test', 'OTLP-31', '447_1730358126.webp'),
 (16, 'SKU unique check', 'UGSI-9059', '202_1730358264.jpeg'),
 (18, 'SKU new format check 2', 'WX95-54EB', '442_1730358314.webp'),
-(25, 'more pic test edit 2', 'UD31-64DI', '815_1730359753.webp');
+(25, 'more pic test edit 2', 'UD31-64DI', '815_1730359753.webp'),
+(26, 'rbac test', 'PU87-69AN', '193_1730948742.gif');
 
 -- --------------------------------------------------------
 
@@ -329,18 +696,18 @@ CREATE TABLE `item_unit` (
   `serial_number` varchar(60) NOT NULL,
   `condition` tinyint(3) UNSIGNED NOT NULL,
   `updated_by` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item_unit`
 --
 
 INSERT INTO `item_unit` (`id_unit`, `id_item`, `status`, `id_wh`, `comment`, `serial_number`, `condition`, `updated_by`) VALUES
-(58, 11, 1, 5, 'test unit edit', 'BOG5409', 1, 5),
+(58, 11, 1, 7, 'rbac test 3', 'BOG5409', 1, 5),
 (59, 11, 1, 6, 'test add new unit', 'BOG-7848', 1, NULL),
 (60, 11, 2, 5, 'finish repair test', 'BOG-2254', 1, 5),
 (61, 11, 3, NULL, 'test add new unit', 'BOG-0642', 3, 8),
-(62, 11, 3, NULL, 'test send to repair', 'BOG-6089', 2, 4),
+(62, 11, 1, 11, 'test rbac', 'BOG-6089', 2, 9),
 (63, 11, 1, 8, 'edit test', 'BOG-7894', 2, NULL),
 (64, 11, 2, 5, 'test add new unit', 'BOG-0790', 1, 5),
 (65, 11, 3, NULL, 'test add new unit', 'BOG-0346', 2, 8),
@@ -350,7 +717,7 @@ INSERT INTO `item_unit` (`id_unit`, `id_item`, `status`, `id_wh`, `comment`, `se
 (69, 11, 1, 5, 'test add new unit', 'BOG-3363', 1, NULL),
 (70, 11, 2, 7, 'test add new unit', 'BOG-2006', 1, 5),
 (71, 12, 1, 5, 'test add new unit', 'OJW-5143', 1, NULL),
-(72, 12, 1, 6, 'test add new unit', 'OJW-5757', 3, 8),
+(72, 12, 3, NULL, 'rbac test', 'OJW-5757', 3, 5),
 (73, 12, 1, 7, 'test add new unit', 'OJW-6303', 1, NULL),
 (74, 13, 1, NULL, 'test add new unit', 'BNK-0338', 1, NULL),
 (75, 13, 1, 5, '', 'BNK-7156', 1, NULL),
@@ -362,10 +729,10 @@ INSERT INTO `item_unit` (`id_unit`, `id_item`, `status`, `id_wh`, `comment`, `se
 (81, 13, 1, 9, 'edit test', 'BNK-9582', 1, NULL),
 (82, 13, 1, 8, 'edit test', 'BNK-1702', 1, 5),
 (83, 14, 1, NULL, '', 'RGT-6039', 1, NULL),
-(84, 14, 2, 5, 'test add new unit', 'RGT-1395', 1, 5),
+(84, 14, 1, 8, 'rbac test', 'RGT-1395', 1, 5),
 (85, 14, 1, 5, 'New Unit', 'RGT-9633', 1, NULL),
 (87, 11, 1, 5, 'mass upload test', 'BOG-670', 1, 5),
-(88, 11, 1, 6, 'mass upload test', 'BOG-389', 1, 5),
+(88, 11, 2, 6, 'mass upload test', 'BOG-389', 1, 1),
 (89, 11, 1, 7, 'mass upload test', 'BOG-460', 1, 5),
 (90, 11, 1, 8, 'mass upload test', 'BOG-932', 1, 5),
 (91, 11, 1, 9, 'mass upload test', 'BOG-623', 1, 5),
@@ -373,7 +740,7 @@ INSERT INTO `item_unit` (`id_unit`, `id_item`, `status`, `id_wh`, `comment`, `se
 (93, 11, 1, 6, 'mass upload test', 'BOG-263', 1, 5),
 (94, 11, 1, 7, 'mass upload test', 'BOG-784', 1, 5),
 (95, 11, 2, 8, 'eyy', 'BOG-261', 1, 5),
-(96, 11, 1, 9, 'mass upload test', 'BOG-914', 1, 5),
+(96, 11, 2, 9, 'mass upload test', 'BOG-914', 1, 5),
 (97, 14, 1, 5, 'mass upload test', 'RGT-908', 1, 5),
 (98, 14, 1, 6, 'mass upload test', 'RGT-882', 1, 5),
 (99, 14, 1, 7, 'mass upload test', 'RGT-567', 1, 5),
@@ -700,7 +1067,14 @@ INSERT INTO `item_unit` (`id_unit`, `id_item`, `status`, `id_wh`, `comment`, `se
 (54206, 15, 1, 10, 'huge rows bulk add', 'OTLP-2135YY-QP', 1, 4),
 (54207, 15, 1, 10, 'huge rows bulk add', 'OTLP-6020ZM-HC', 1, 4),
 (54208, 15, 1, 10, 'huge rows bulk add', 'OTLP-7705PR-XH', 1, 4),
-(54209, 15, 1, 10, 'huge rows bulk add', 'OTLP-5084WI-DZ', 1, 4);
+(54209, 15, 1, 10, 'huge rows bulk add', 'OTLP-5084WI-DZ', 1, 4),
+(54210, 26, 1, 5, 'rbac test', 'PU87-3865SB-CB', 1, 5),
+(54211, 26, 1, 5, 'rbac test webvimark bulk', 'PU87-2604YU-GG', 1, 5),
+(54212, 26, 1, 6, 'rbac test webvimark bulk', 'PU87-5165WZ-FF', 1, 5),
+(54213, 26, 1, 7, 'rbac test webvimark bulk', 'PU87-2309CI-BE', 1, 5),
+(54214, 26, 1, 8, 'rbac test webvimark bulk', 'PU87-7290MP-OU', 1, 5),
+(54215, 26, 1, 9, 'rbac test webvimark bulk', 'PU87-2368QM-AM', 1, 5),
+(54216, 26, 1, 10, 'rbac test webvimark bulk', 'PU87-5412DB-WD', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -715,7 +1089,7 @@ CREATE TABLE `lending` (
   `id_employee` int(10) UNSIGNED NOT NULL,
   `type` tinyint(3) UNSIGNED NOT NULL,
   `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `lending`
@@ -735,13 +1109,16 @@ INSERT INTO `lending` (`id_lending`, `id_unit`, `user_id`, `id_employee`, `type`
 (40, 70, 8, 3, 2, '2024-10-31'),
 (41, 64, 8, 2, 2, '2024-10-30'),
 (42, 84, 5, 4, 2, '2024-10-30'),
-(43, 84, 5, 1, 1, '2024-10-31'),
+(43, 84, 5, 1, 2, '2024-11-07'),
 (44, 64, 5, 2, 1, '2024-10-31'),
 (45, 70, 5, 1, 1, '2024-10-31'),
 (46, 60, 5, 1, 1, '2024-10-31'),
 (47, 95, 5, 1, 1, '2024-10-31'),
 (48, 95, 5, 1, 1, '2024-10-31'),
-(49, 53308, 4, 2, 1, '2024-10-31');
+(49, 53308, 4, 2, 1, '2024-10-31'),
+(50, 96, 5, 2, 1, '2024-11-07'),
+(51, 88, 1, 5, 1, '2024-11-08'),
+(52, 88, 1, 5, 1, '2024-11-08');
 
 -- --------------------------------------------------------
 
@@ -752,7 +1129,7 @@ INSERT INTO `lending` (`id_lending`, `id_unit`, `user_id`, `id_employee`, `type`
 CREATE TABLE `lending_type_lookup` (
   `id_type` tinyint(3) UNSIGNED NOT NULL,
   `type_name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `lending_type_lookup`
@@ -771,7 +1148,7 @@ INSERT INTO `lending_type_lookup` (`id_type`, `type_name`) VALUES
 CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `migration`
@@ -799,7 +1176,7 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 CREATE TABLE `status_lookup` (
   `id_status` tinyint(3) UNSIGNED NOT NULL,
   `status_name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `status_lookup`
@@ -822,7 +1199,7 @@ CREATE TABLE `unit_log` (
   `id_unit` int(10) NOT NULL,
   `content` varchar(255) NOT NULL,
   `update_at` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `unit_log`
@@ -879,7 +1256,18 @@ INSERT INTO `unit_log` (`id_log`, `id_unit`, `content`, `update_at`) VALUES
 (71, 95, 'Unit BOG-261 lent to johan tumbal by tumbaladmin', '2024-10-31 09:16:03.000000'),
 (72, 95, 'Unit BOG-261 lent to johan tumbal by tumbaladmin', '2024-10-31 09:16:03.000000'),
 (73, 95, 'Unit BOG-261 updated by tumbaladmin', '2024-10-31 09:17:30.000000'),
-(74, 53308, 'Unit WX95-8225CZ-GH lent to Emma by fradmin', '2024-10-31 10:44:28.000000');
+(74, 53308, 'Unit WX95-8225CZ-GH lent to Emma by fradmin', '2024-10-31 10:44:28.000000'),
+(75, 58, 'Unit BOG5409 updated by tumbaladmin', '2024-11-07 09:57:30.000000'),
+(76, 58, 'Unit BOG5409 updated by tumbaladmin', '2024-11-07 10:00:19.000000'),
+(77, 58, 'Unit BOG5409 updated by tumbaladmin', '2024-11-07 10:00:41.000000'),
+(78, 58, 'Unit BOG5409 updated by tumbaladmin', '2024-11-07 10:00:49.000000'),
+(79, 58, 'Unit BOG5409 updated by tumbaladmin', '2024-11-07 10:01:07.000000'),
+(80, 96, 'Unit BOG-914 lent to Emma by tumbaladmin', '2024-11-07 10:17:15.000000'),
+(81, 84, 'Unit RGT-1395 returned by johan tumbal, recieved by tumbaladmin', '2024-11-07 10:19:24.000000'),
+(82, 72, 'Unit OJW-5757 sent for repair by tumbaladmin', '2024-11-07 10:23:16.000000'),
+(83, 62, 'Unit BOG-6089 repaired. Taken to warehouse by bobtherepairman', '2024-11-07 10:44:01.000000'),
+(84, 88, 'Unit BOG-389 lent to Shioriiiin by superadmin', '2024-11-08 09:10:13.000000'),
+(85, 88, 'Unit BOG-389 lent to Shioriiiin by superadmin', '2024-11-08 09:10:13.000000');
 
 -- --------------------------------------------------------
 
@@ -897,21 +1285,26 @@ CREATE TABLE `user` (
   `updated_at` datetime(2) NOT NULL,
   `registration_ip` varchar(15) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
-  `auth_key` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `auth_key` varchar(255) DEFAULT NULL,
+  `bind_to_ip` varchar(255) NOT NULL,
+  `email_confirmed` int(11) NOT NULL,
+  `confirmation_token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password_hash`, `status`, `superadmin`, `created_at`, `updated_at`, `registration_ip`, `email`, `auth_key`) VALUES
-(1, 'superadmin', '$2y$13$bp2w2.mTeJ/ORRVlEjA.jOHw0o49vwAJ.A15RTPjnSyk05M.20ZyS', 1, 1, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', NULL, 'super@mail.com', 'OtBMG-3O_ULHaEMKmM_pZIPvia1k_js_'),
-(3, 'testadmin', '$2y$13$8jToEiJJ/L7dhZNXz56y4.1rV2kJbDIEQLokJstXcjRqc5nR8rvyO', 1, 1, '2024-10-28 10:58:27.00', '2024-10-28 10:58:27.00', '::1', 'ayylmao@mail.com', '1NowdoRm0YblCkSDLTOBJ99siYE-qXzk'),
-(4, 'fradmin', '$2y$13$.X94ue5lX8Yt10motmlym.HyhumhiBXBZ7leukSITV7e9sTgLjNrK', 1, 1, '2024-10-28 13:20:22.00', '2024-10-28 13:20:22.00', '::1', 'bogosbinted@mail.com', 'pUwr74uXpIAq5h1XQU-3y3PuplNbm2P8'),
-(5, 'tumbaladmin', '$2y$13$oji5ybAbMX6xVIBIP/5/1.qVgkhs1l5smEMYGwXToWrtXAXTpHK0O', 1, 0, '2024-10-28 14:32:42.00', '2024-10-28 14:32:42.00', '::1', 'tumbaladelete@mail.com', 'LZN0hVpdM-xAb6SA0AEALIcxiVeCAS5H'),
-(6, 'bantumbal', '$2y$13$j42fyUhAf52CtZIPfXvOc.WZHyCpSUXx51ge6NY9TbKWoly/jHf6u', 1, 1, '2024-10-29 13:59:28.00', '2024-10-29 13:59:28.00', '::1', 'bogos@mail.com', '3JyL2_1DPta8-s1uxL4wsHnZaNhttF-t'),
-(7, 'tumbalsekian', '$2y$13$rPtXOmHZqZ8Z1XSHkF/fvuhEi30Z45e2J6J.TqpVsq9UU.Y6Ozmoe', 1, 0, '2024-10-30 08:17:03.00', '2024-10-30 08:17:03.00', '::1', 'bogusmail@mail.com', 'IGsAN_oI96DsHjpzgo98gLc5hMd7dGJ4'),
-(8, 'fredadmin', '$2y$13$XZ6TofHa8d5cAMutTqSMs.QzdqeRCGMeRs3ZfqoMQCWveNyOjdTs2', 1, 0, '2024-10-30 08:40:40.00', '2024-10-30 08:40:40.00', '::1', 'fred@mail.com', 'JGU2pLcVye5PBUUqBlGuB7h1M8c6gkrx');
+INSERT INTO `user` (`id`, `username`, `password_hash`, `status`, `superadmin`, `created_at`, `updated_at`, `registration_ip`, `email`, `auth_key`, `bind_to_ip`, `email_confirmed`, `confirmation_token`) VALUES
+(1, 'superadmin', '$2y$13$bp2w2.mTeJ/ORRVlEjA.jOHw0o49vwAJ.A15RTPjnSyk05M.20ZyS', 1, 1, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', NULL, 'super@mail.com', 'OtBMG-3O_ULHaEMKmM_pZIPvia1k_js_', '', 1, ''),
+(4, 'appadmin', '$2y$13$.X94ue5lX8Yt10motmlym.HyhumhiBXBZ7leukSITV7e9sTgLjNrK', 1, 0, '2024-10-28 13:20:22.00', '0000-00-00 00:00:00.00', '::1', 'bogosbinted@mail.com', 'pUwr74uXpIAq5h1XQU-3y3PuplNbm2P8', '', 1, ''),
+(5, 'franzferdinand', '$2y$13$QEUqv2hQRuKQ2uFtNfXbcuPoiz2pyiZsn1kpv3RfboEQEdA8MZC9e', 1, 0, '2024-10-28 14:32:42.00', '0000-00-00 00:00:00.00', '::1', 'ferdinand@mail.com', 'LZN0hVpdM-xAb6SA0AEALIcxiVeCAS5H', '', 1, ''),
+(7, 'tumbalsekian', '$2y$13$rPtXOmHZqZ8Z1XSHkF/fvuhEi30Z45e2J6J.TqpVsq9UU.Y6Ozmoe', 1, 0, '2024-10-30 08:17:03.00', '2024-10-30 08:17:03.00', '::1', 'bogusmail@mail.com', 'IGsAN_oI96DsHjpzgo98gLc5hMd7dGJ4', '', 1, ''),
+(8, 'warehouse@mail.com', '$2y$13$XZ6TofHa8d5cAMutTqSMs.QzdqeRCGMeRs3ZfqoMQCWveNyOjdTs2', 1, 0, '2024-10-30 08:40:40.00', '0000-00-00 00:00:00.00', '::1', 'fred@mail.com', 'JGU2pLcVye5PBUUqBlGuB7h1M8c6gkrx', '', 1, ''),
+(9, 'bobtherepairman', '$2y$13$0FJ7ZV.5Th2sydV4mDEP2u81kx56ocrbVEFZomEzdjK6xPfRt0xGa', 1, 0, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', '::1', 'bobrepair@mail.com', 'MbIXLNVCI6OHZFAZgwzyyLXTeiaVd6At', '', 1, ''),
+(10, 'bogosbinted', '$2y$13$byH/Orep9xl5ZWDL1IMtH.1NRxOm2IK/s9vDxODkiEp7o2gJ9TuZ2', 1, 0, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', '::1', 'bogosbinted@alien.com', 'LMStQ2EH_AMPtTfWSbwc9Li493FfLSTY', '', 1, ''),
+(11, 'manfred', '$2y$13$S.Pu6X0K3VWvc/kr2atfyuWdDK9xYc1BMFyvHBnjKWMjJCZuUwKRG', 1, 0, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', '::1', 'redbaron@mail.com', 'E8fnjVCzTMoHqvXiFnfAyEEw7aU80X5W', '', 1, ''),
+(12, 'hugh', '$2y$13$iREFX85Oa9udbjkKDslyy.46GR1OLNOKYh6JaiZ03pfwS59xaCnUS', 1, 0, '0000-00-00 00:00:00.00', '0000-00-00 00:00:00.00', '::1', 'hugh@mail.com', '-R2PpAC6v4_aTMieMxphBxZ3l_tgVRez', '', 1, '');
 
 -- --------------------------------------------------------
 
@@ -929,7 +1322,47 @@ CREATE TABLE `user_visit_log` (
   `visit_time` int(11) NOT NULL,
   `browser` varchar(30) DEFAULT NULL,
   `os` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `user_visit_log`
+--
+
+INSERT INTO `user_visit_log` (`id`, `token`, `ip`, `language`, `user_agent`, `user_id`, `visit_time`, `browser`, `os`) VALUES
+(1, '672c16dc84d32', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 1, 1730942684, 'Chrome', 'Windows'),
+(2, '672c18f5e7365', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 1, 1730943221, 'Chrome', 'Windows'),
+(3, '672c21efda00e', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 5, 1730945519, 'Chrome', 'Windows'),
+(4, '672c28a54750c', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 1, 1730947237, 'Chrome', 'Windows'),
+(5, '672c2c60da2ca', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730948192, 'Chrome', 'Windows'),
+(6, '672c35658ae4b', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730950501, 'Chrome', 'Windows'),
+(7, '672c37b84241f', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730951096, 'Chrome', 'Windows'),
+(8, '672c39c88e63e', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730951624, 'Chrome', 'Windows'),
+(9, '672c3a385d005', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730951736, 'Chrome', 'Windows'),
+(10, '672c3afd75f13', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730951933, 'Chrome', 'Windows'),
+(11, '672c3b5ac8bc0', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730952026, 'Chrome', 'Windows'),
+(12, '672c3b61b9b5c', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730952033, 'Chrome', 'Windows'),
+(13, '672c3be089697', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730952160, 'Chrome', 'Windows'),
+(14, '672c3dd86522e', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 10, 1730952664, 'Chrome', 'Windows'),
+(15, '672c3f7005e81', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730953072, 'Chrome', 'Windows'),
+(16, '672c4196049a8', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730953622, 'Chrome', 'Windows'),
+(17, '672c41cd410d8', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', NULL, 1730953677, 'Chrome', 'Windows'),
+(18, '672c41f6c5272', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730953718, 'Chrome', 'Windows'),
+(19, '672c43edd6228', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730954221, 'Chrome', 'Windows'),
+(20, '672c43ee9b9ab', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730954222, 'Chrome', 'Windows'),
+(21, '672c5e257ecb2', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730960933, 'Chrome', 'Windows'),
+(22, '672c5e6b70cba', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730961003, 'Chrome', 'Windows'),
+(23, '672c607b9de46', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730961531, 'Chrome', 'Windows'),
+(24, '672c631a85584', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 11, 1730962202, 'Chrome', 'Windows'),
+(25, '672c63a2a9199', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730962338, 'Chrome', 'Windows'),
+(26, '672c64e152848', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1730962657, 'Chrome', 'Windows'),
+(27, '672c64ebcb9fb', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 10, 1730962667, 'Chrome', 'Windows'),
+(28, '672c66f688a01', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 9, 1730963190, 'Chrome', 'Windows'),
+(29, '672c66feeaa8a', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 10, 1730963198, 'Chrome', 'Windows'),
+(30, '672d65a65750b', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 1, 1731028390, 'Chrome', 'Windows'),
+(31, '672d84ff293ca', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 10, 1731036415, 'Chrome', 'Windows'),
+(32, '672d850843ba3', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1731036424, 'Chrome', 'Windows'),
+(33, '672d86868f007', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 4, 1731036806, 'Chrome', 'Windows'),
+(34, '672d8742e61f7', '::1', 'en', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 5, 1731036994, 'Chrome', 'Windows');
 
 -- --------------------------------------------------------
 
@@ -941,7 +1374,7 @@ CREATE TABLE `warehouse` (
   `id_wh` int(10) UNSIGNED NOT NULL,
   `wh_name` varchar(255) NOT NULL,
   `wh_address` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `warehouse`
@@ -953,7 +1386,8 @@ INSERT INTO `warehouse` (`id_wh`, `wh_name`, `wh_address`) VALUES
 (7, 'Brandenburg', 'somewhere in brandenburg'),
 (8, 'Azores', 'somewhere in azores in the middle of atlantic ocean'),
 (9, 'Samoa', 'somewhere in samoa'),
-(10, 'Hugh Mongus Warehouse', 'for testing. adding units in massive bulk');
+(10, 'Hugh Mongus Warehouse', 'for testing. adding units in massive bulk'),
+(11, 'His Highness, His Excellency\'s Royal Storage 1', 'somewhere in a city');
 
 --
 -- Indexes for dumped tables
@@ -999,6 +1433,13 @@ ALTER TABLE `auth_rule`
 --
 ALTER TABLE `condition_lookup`
   ADD PRIMARY KEY (`id_condition`);
+
+--
+-- Indexes for table `doc_uploaded`
+--
+ALTER TABLE `doc_uploaded`
+  ADD PRIMARY KEY (`id_doc`),
+  ADD KEY `doc_user` (`user_id`);
 
 --
 -- Indexes for table `employee`
@@ -1090,28 +1531,34 @@ ALTER TABLE `condition_lookup`
   MODIFY `id_condition` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `doc_uploaded`
+--
+ALTER TABLE `doc_uploaded`
+  MODIFY `id_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `id_employee` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_employee` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id_item` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_item` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `item_unit`
 --
 ALTER TABLE `item_unit`
-  MODIFY `id_unit` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54210;
+  MODIFY `id_unit` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54217;
 
 --
 -- AUTO_INCREMENT for table `lending`
 --
 ALTER TABLE `lending`
-  MODIFY `id_lending` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id_lending` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `lending_type_lookup`
@@ -1129,25 +1576,25 @@ ALTER TABLE `status_lookup`
 -- AUTO_INCREMENT for table `unit_log`
 --
 ALTER TABLE `unit_log`
-  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `user_visit_log`
 --
 ALTER TABLE `user_visit_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `warehouse`
 --
 ALTER TABLE `warehouse`
-  MODIFY `id_wh` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_wh` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -1173,6 +1620,12 @@ ALTER TABLE `auth_item`
 ALTER TABLE `auth_item_child`
   ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `doc_uploaded`
+--
+ALTER TABLE `doc_uploaded`
+  ADD CONSTRAINT `doc_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `item_unit`
